@@ -1,0 +1,12 @@
+matrix:
+  include:
+    - language: java
+      script: mvn -f java/pom.xml verify
+      cache:
+        directories:
+          - '$HOME/.m2/repository'
+
+    - language: csharp
+      mono: none
+      dotnet: 2.2
+      script: dotnet test dotnet/Razorvine.Pickle/UnitTests
