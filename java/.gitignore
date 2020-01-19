@@ -1,0 +1,6 @@
+# intellij workspace info
+.idea/workspace.xml
+
+# java/maven
+target/
+
