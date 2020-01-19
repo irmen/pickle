@@ -1,12 +1,13 @@
 package net.razorvine.pickle.objects;
 
-import java.lang.reflect.Constructor;
 import net.razorvine.pickle.IObjectConstructor;
 import net.razorvine.pickle.PickleException;
 
+import java.lang.reflect.Constructor;
+
 /**
  * This object constructor uses reflection to create instances of any given class.
- * 
+ *
  * @author Irmen de Jong (irmen@razorvine.net)
  */
 public class AnyClassConstructor implements IObjectConstructor {

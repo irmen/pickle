@@ -7,11 +7,11 @@ import java.util.List;
 
 /**
  * Helper type that represents the unpickler working stack.
- * 
+ *
  * @author Irmen de Jong (irmen@razorvine.net)
  */
 public class UnpickleStack implements Serializable {
-	private static final long serialVersionUID = 6148106506441423350L;
+	private static final long serialVersionUID = 5032718425413805422L;
 	private ArrayList<Object> stack;
 	protected Object MARKER;
 

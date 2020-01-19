@@ -1,14 +1,14 @@
 package net.razorvine.pickle.objects;
 
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-
 import net.razorvine.pickle.IObjectConstructor;
 import net.razorvine.pickle.PickleException;
 
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+
 /**
  * Creates byte arrays (byte[]).
- * 
+ *
  * @author Irmen de Jong (irmen@razorvine.net)
  */
 public class ByteArrayConstructor implements IObjectConstructor {

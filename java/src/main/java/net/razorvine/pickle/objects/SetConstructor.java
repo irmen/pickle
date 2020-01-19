@@ -1,13 +1,13 @@
 package net.razorvine.pickle.objects;
 
+import net.razorvine.pickle.IObjectConstructor;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 
-import net.razorvine.pickle.IObjectConstructor;
-
 /**
  * This object constructor creates sets.
- * 
+ *
  * @author Irmen de Jong (irmen@razorvine.net)
  */
 public class SetConstructor implements IObjectConstructor {

@@ -5,19 +5,12 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.StringWriter;
 import java.text.DateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Object output pretty printing, to help with the test scripts.
  * Nothing fancy, just a simple readable output format for a handfull of classes.
- * 
+ *
  * @author Irmen de Jong (irmen@razorvine.net)
  */
 public class PrettyPrint {
@@ -34,7 +27,7 @@ public class PrettyPrint {
 		}
 		return sw.toString().trim();
 	}
-	
+
 	/**
 	 * Prettyprint directly to the standard output.
 	 */
@@ -43,7 +36,7 @@ public class PrettyPrint {
 		print(o, w, true);
 		w.flush();
 	}
-	
+
 	/**
 	 * Prettyprint the object to the outputstream. (UTF-8 output encoding is used)
 	 */
@@ -52,7 +45,7 @@ public class PrettyPrint {
 		print(o,w,typeheader);
 		w.flush();
 	}
-	
+
 	/**
 	 * Prettyprint the object to the writer.
 	 */
@@ -135,7 +128,7 @@ public class PrettyPrint {
 			}
 			writer.write(o.toString());   writer.write("\n");
 		}
-		
+
 		writer.flush();
 	}
 }

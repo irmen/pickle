@@ -1,8 +1,9 @@
 package net.razorvine.pickle.objects;
 
+import net.razorvine.pickle.PickleException;
+
 import java.util.HashMap;
 import java.util.TimeZone;
-import net.razorvine.pickle.PickleException;
 
 /**
  * Timezone offset class that implements __setstate__ for the unpickler

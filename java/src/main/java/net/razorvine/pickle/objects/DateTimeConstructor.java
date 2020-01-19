@@ -1,15 +1,15 @@
 package net.razorvine.pickle.objects;
 
+import net.razorvine.pickle.IObjectConstructor;
+import net.razorvine.pickle.PickleException;
+
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
 
-import net.razorvine.pickle.IObjectConstructor;
-import net.razorvine.pickle.PickleException;
-
 /**
  * This constructor can create various datetime related objects.
- * 
+ *
  * @author Irmen de Jong (irmen@razorvine.net)
  */
 public class DateTimeConstructor implements IObjectConstructor {
@@ -64,7 +64,7 @@ public class DateTimeConstructor implements IObjectConstructor {
 			TimeZone tz = null;
 			if(args.length==8)
 				tz = (TimeZone) args[7];
-			
+
 			Calendar cal = new GregorianCalendar(year, month, day, hour, minute, second);
 			cal.set(Calendar.MILLISECOND, microsec/1000);
 			if(tz!=null)
@@ -73,7 +73,7 @@ public class DateTimeConstructor implements IObjectConstructor {
 		}
 		if (args.length != 1 && args.length != 2)
 			throw new PickleException("invalid pickle data for datetime; expected 1, 2, 7 or 8 args, got "+args.length);
-		
+
 		int yhi, ylo, month, day, hour, minute, second, microsec;
 		if(args[0] instanceof String) {
 			String params = (String) args[0];

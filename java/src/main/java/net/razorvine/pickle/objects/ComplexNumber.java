@@ -4,11 +4,11 @@ import java.io.Serializable;
 
 /**
  * An immutable Complex Number class.
- * 
+ *
  * @author Irmen de Jong (irmen@razorvine.net)
  */
 public class ComplexNumber implements Serializable {
-	private static final long serialVersionUID = 7093033866379803297L;
+	private static final long serialVersionUID = 4668080260997226513L;
 	private double r;	// real
 	private double i;	// imaginary
 

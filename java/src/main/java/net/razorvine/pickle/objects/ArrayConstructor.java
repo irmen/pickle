@@ -1,23 +1,23 @@
 package net.razorvine.pickle.objects;
 
-import java.util.ArrayList;
-
 import net.razorvine.pickle.IObjectConstructor;
 import net.razorvine.pickle.PickleException;
 import net.razorvine.pickle.PickleUtils;
+
+import java.util.ArrayList;
 
 /**
  * Creates arrays of objects. Returns a primitive type array such as int[] if
  * the objects are ints, etc. Returns an ArrayList<Object> if it needs to
  * contain arbitrary objects (such as lists).
- * 
+ *
  * @author Irmen de Jong (irmen@razorvine.net)
  */
 public class ArrayConstructor implements IObjectConstructor {
 
 	public Object construct(Object[] args) throws PickleException {
 		// args for array constructor: [ String typecode, ArrayList<Object> values ]
-		// or: [ constructor_class, typecode, machinecode_type, byte[] ] 
+		// or: [ constructor_class, typecode, machinecode_type, byte[] ]
 		if (args.length == 4) {
 			ArrayConstructor constructor = (ArrayConstructor) args[0];
 			char typecode = ((String) args[1]).charAt(0);
@@ -33,7 +33,7 @@ public class ArrayConstructor implements IObjectConstructor {
 		if(args[1] instanceof String) {
 			// python 2.6 encodes the array as a string sequence rather than a list
 			// unpickling this is not supported at this time
-			throw new PickleException("unsupported Python 2.6 array pickle format");		
+			throw new PickleException("unsupported Python 2.6 array pickle format");
 		}
 		@SuppressWarnings("unchecked")
 		ArrayList<Object> values = (ArrayList<Object>) args[1];
@@ -323,7 +323,7 @@ public class ArrayConstructor implements IObjectConstructor {
 			}
 		}
 		return result;
-	}	
+	}
 
 	protected double[] constructDoubleArray(int machinecode, byte[] data) {
 		double[] result = new double[data.length / 8];
@@ -402,12 +402,12 @@ public class ArrayConstructor implements IObjectConstructor {
 		}
 		return result;
 	}
-	
+
 	protected char[] constructCharArrayUTF32(int machinecode, byte[] data) {
 		char[] result = new char[data.length / 4];
 		byte[] bigendian=new byte[4];
 		for (int index = 0; index < data.length / 4; ++index) {
-			if (machinecode == 20) { 
+			if (machinecode == 20) {
 				int codepoint=PickleUtils.bytes_to_integer(data, index*4, 4);
 				char[] cc=Character.toChars(codepoint);
 				if(cc.length>1)
@@ -434,7 +434,7 @@ public class ArrayConstructor implements IObjectConstructor {
 		char[] result = new char[data.length / 2];
 		byte[] bigendian=new byte[2];
 		for (int index = 0; index < data.length / 2; ++index) {
-			if (machinecode == 18) { 
+			if (machinecode == 18) {
 				result[index] = (char) PickleUtils.bytes_to_integer(data, index*2, 2);
 			}
 			else {

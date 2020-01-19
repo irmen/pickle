@@ -5,11 +5,11 @@ import java.util.Calendar;
 
 /**
  * Helper class to mimic the datetime.time Python object (holds a hours/minute/seconds/microsecond time).
- * 
+ *
  * @author Irmen de Jong (irmen@razorvine.net)
  */
 public class Time implements Serializable {
-	private static final long serialVersionUID = 7048987424134614062L;
+	private static final long serialVersionUID = 2325820650757621315L;
 	public int hours;
 	public int minutes;
 	public int seconds;
@@ -21,7 +21,7 @@ public class Time implements Serializable {
 		seconds = s;
 		microseconds = microsecs;
 	}
-	
+
 	public Time(long milliseconds) {
 		Calendar cal = Calendar.getInstance();
 		cal.setTimeInMillis(milliseconds);
@@ -30,7 +30,7 @@ public class Time implements Serializable {
 		this.seconds = cal.get(Calendar.SECOND);
 		this.microseconds = cal.get(Calendar.MILLISECOND) * 1000;
 	}
-	
+
 	public String toString() {
 		return String.format("Time: %d hours, %d minutes, %d seconds, %d microseconds", hours, minutes, seconds, microseconds);
 	}
@@ -58,5 +58,5 @@ public class Time implements Serializable {
 		return hours==other.hours && minutes==other.minutes && seconds==other.seconds && microseconds==other.microseconds;
 	}
 
-	
+
 }

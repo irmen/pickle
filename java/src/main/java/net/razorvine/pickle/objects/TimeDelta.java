@@ -6,11 +6,11 @@ import java.util.Locale;
 
 /**
  * Helper class to mimic the datetime.timedelta Python object (holds a days/seconds/microsec time difference).
- * 
+ *
  * @author Irmen de Jong (irmen@razorvine.net)
  */
 public class TimeDelta implements Serializable {
-	private static final long serialVersionUID = 5793744158850914421L;
+	private static final long serialVersionUID = 7655189815303876847L;
 	public int days;
 	public int seconds;
 	public int microseconds;
@@ -22,7 +22,7 @@ public class TimeDelta implements Serializable {
 		this.microseconds = microseconds;
 		this.total_seconds = days*86400+seconds+microseconds/1000000.0;
 	}
-	
+
 	public String toString() {
 		NumberFormat nf=NumberFormat.getInstance(Locale.UK);
 		nf.setGroupingUsed(false);
@@ -54,6 +54,6 @@ public class TimeDelta implements Serializable {
 		TimeDelta other = (TimeDelta) obj;
 		return days==other.days && seconds==other.seconds && microseconds==other.microseconds && total_seconds==other.total_seconds;
 	}
-	
-	
+
+
 }

@@ -8,9 +8,9 @@ import java.util.Map;
  */
 public class ClassDict extends HashMap<String, Object>
 {
-	private static final long serialVersionUID = 576056580143549390L;
+	private static final long serialVersionUID = 6157715596627049511L;
 	private String classname;
-	
+
 	public ClassDict(String modulename, String classname)
 	{
 		if(modulename==null)
@@ -20,7 +20,7 @@ public class ClassDict extends HashMap<String, Object>
 
 		this.put("__class__", this.classname);
 	}
-	
+
 	/**
 	 * for the unpickler to restore state
 	 */
@@ -33,7 +33,7 @@ public class ClassDict extends HashMap<String, Object>
 		}
 	}
 
-	
+
 	/**
 	 * retrieve the (python) class name of the object that was pickled.
 	 */

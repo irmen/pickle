@@ -1,15 +1,15 @@
 package net.razorvine.pickle.objects;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-
 import net.razorvine.pickle.IObjectConstructor;
 import net.razorvine.pickle.PickleException;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+
 /**
- * This creates Python Exception instances. 
+ * This creates Python Exception instances.
  * It keeps track of the original Python exception type name as well.
- * 
+ *
  * @author Irmen de Jong (irmen@razorvine.net)
  */
 public class ExceptionConstructor implements IObjectConstructor {
@@ -42,7 +42,7 @@ public class ExceptionConstructor implements IObjectConstructor {
 			}
 			Constructor<?> cons = type.getConstructor(paramtypes);
 			Object ex = cons.newInstance(args);
-			
+
 			try {
 				Field prop = ex.getClass().getField("pythonExceptionType");
 				prop.set(ex, pythonExceptionType);

@@ -773,7 +773,7 @@ public class PicklerTest {
 	}
 
 	public static class PersonBean extends PersonBaseBean implements java.io.Serializable {
-		private static final long serialVersionUID = 3236709849734459121L;
+		private static final long serialVersionUID = -1383554145587820242L;
 		private String name;
 	    private boolean deceased;
 	    private int[] values;

@@ -2,7 +2,7 @@ package net.razorvine.pickle.objects;
 
 import net.razorvine.pickle.IObjectConstructor;
 import net.razorvine.pickle.PickleException;
-import net.razorvine.pickle.objects.Tzinfo;
+
 import java.util.TimeZone;
 
 public class TimeZoneConstructor implements IObjectConstructor {
@@ -18,7 +18,7 @@ public class TimeZoneConstructor implements IObjectConstructor {
 	public TimeZoneConstructor(int pythontype) {
 		this.pythontype = pythontype;
 	}
-	
+
 	@Override
 	public Object construct(Object[] args) throws PickleException {
 	if (this.pythontype == UTC)

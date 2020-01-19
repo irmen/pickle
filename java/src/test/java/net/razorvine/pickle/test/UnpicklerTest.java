@@ -616,7 +616,7 @@ public class UnpicklerTest {
 		// ["string", bytearray(b'irmen')]  ->  produces a protocol 5 pickle with opcode BYTEARRAY8
 		Unpickler u = new Unpickler();
 		byte[] data = PickleUtils.str2bytes("\u0080\u0005\u0095\u001d\u0000\u0000\u0000\u0000\u0000\u0000\u0000]\u0094(\u008c\u0006string\u0094\u0096\u0005\u0000\u0000\u0000\u0000\u0000\u0000\u0000irmen\u0094e.");
-		ArrayList result = (ArrayList) u.loads(data);
+		ArrayList<Object> result = (ArrayList<Object>) u.loads(data);
 		assertEquals(2, result.size());
 		assertEquals("string", result.get(0));
 		assertArrayEquals(new byte[] {'i', 'r', 'm', 'e', 'n'}, (byte[]) result.get(1));
@@ -692,17 +692,17 @@ public class UnpicklerTest {
 		Unpickler unpickler = new Unpickler();
 
         for (byte[] bytes : array) {
-            ArrayList<ArrayList<Object>> pickled1 = (ArrayList<ArrayList<Object>>) unpickler.loads(bytes);
+            ArrayList<Object[]> pickled1 = (ArrayList<Object[]>) unpickler.loads(bytes);
             Unpickler u2 = new Unpickler();
-            ArrayList<ArrayList<Object>> pickled2 = (ArrayList<ArrayList<Object>>) u2.loads(bytes);
+            ArrayList<Object[]> pickled2 = (ArrayList<Object[]>) u2.loads(bytes);
             u2.close();
 
-            Iterator iter1 = pickled1.iterator();
-            Iterator iter2 = pickled2.iterator();
+            Iterator<Object[]> iter1 = pickled1.iterator();
+            Iterator<Object[]> iter2 = pickled2.iterator();
 
             while (iter1.hasNext()) {
-                Object[] obj1 = (Object[]) iter1.next();
-                Object[] obj2 = (Object[]) iter2.next();
+                Object[] obj1 = iter1.next();
+                Object[] obj2 = iter2.next();
 
                 for (Object o : obj1) {
                     assertEquals(expected, o);

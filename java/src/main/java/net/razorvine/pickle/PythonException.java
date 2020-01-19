@@ -5,11 +5,11 @@ import java.util.List;
 
 /**
  * Exception thrown that represents a certain Python exception.
- * 
+ *
  * @author Irmen de Jong (irmen@razorvine.net)
  */
 public class PythonException extends RuntimeException {
-	private static final long serialVersionUID = 5104356796885969838L;
+	private static final long serialVersionUID = 4884843316742683086L;
 
 	public String _pyroTraceback;
 	public String pythonExceptionType;
@@ -21,7 +21,7 @@ public class PythonException extends RuntimeException {
 	public PythonException(String message) {
 		super(message);
 	}
-	
+
 	public PythonException(Throwable cause)
 	{
 		super(cause);
@@ -31,13 +31,13 @@ public class PythonException extends RuntimeException {
 	{
 		super();
 	}
-	
+
 	// special constructor for UnicodeDecodeError
 	public PythonException(String encoding, byte[] data, Integer i1, Integer i2, String message)
 	{
 		super("UnicodeDecodeError: "+encoding+": "+message);
 	}
-	
+
 	/**
 	 * called by the unpickler to restore state
 	 */
@@ -48,10 +48,10 @@ public class PythonException extends RuntimeException {
 			StringBuilder sb=new StringBuilder();
 			for(Object line: (List<?>)tb) {
 				sb.append(line);
-			}	
+			}
 			_pyroTraceback=sb.toString();
 		} else {
 			_pyroTraceback=(String)tb;
 		}
-	}	
+	}
 }

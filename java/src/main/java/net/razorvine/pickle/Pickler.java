@@ -1,5 +1,8 @@
 package net.razorvine.pickle;
 
+import net.razorvine.pickle.objects.Time;
+import net.razorvine.pickle.objects.TimeDelta;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -8,18 +11,8 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
-import java.util.TimeZone;
-
-import net.razorvine.pickle.objects.Time;
-import net.razorvine.pickle.objects.TimeDelta;
 
 /**
  * Pickle an object graph into a Python-compatible pickle stream. For
