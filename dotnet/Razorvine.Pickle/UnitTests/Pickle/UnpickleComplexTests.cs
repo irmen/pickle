@@ -1,9 +1,13 @@
 /* part of Pickle, by Irmen de Jong (irmen@razorvine.net) */
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-
+using System.IO;
+using System.Reflection;
+using System.Security.Cryptography;
+using System.Text;
 using Xunit;
 using Razorvine.Pickle;
 using Razorvine.Pickle.Objects;
@@ -29,6 +33,23 @@ public class UnpickleComplexTests
 		}
 	}
 
+	[Fact]
+	public void TestUnpickleProto0Bytes()
+	{
+		var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("UnitTests.pickled_bytes_level0.dat");
+		var ms = new MemoryStream();
+		stream.CopyTo(ms);
+
+		byte[] pickle = ms.ToArray();
+		string x = (string)(new Unpickler()).loads(pickle);
+		Assert.Equal(2496, x.Length);
+
+		// validate that the bytes in the string are what we expect (based on md5 hash)
+		SHA1 m = SHA1.Create();
+		var digest = m.ComputeHash(Encoding.UTF8.GetBytes(x));
+		Assert.Equal("22F45B876383C91B1CB20AFE51EE3B30F5A85D4C", BitConverter.ToString(digest).Replace("-", ""));
+	}
+	
 	[Fact]
 	public void TestUnpickleMemo() {
 		// the pickle is of the following list: [65, 'hello', 'hello', {'recurse': [...]}, 'hello']

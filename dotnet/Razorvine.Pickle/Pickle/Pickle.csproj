@@ -15,15 +15,9 @@
     <DelaySign>false</DelaySign>
     <AssemblyOriginatorKeyFile>Pickle.snk</AssemblyOriginatorKeyFile>
     <Summary>Pyro (Python Remote Objects) client library</Summary>
-    <Description>Thin client-side communication library to connect to Python applications, using the Pyro protocol.
-Also includes Pickle/Unpickle.
-More info about Pyro: https://pyro4.readthedocs.io/</Description>
+    <Description>A feature complete pickle protocol implementation (Python's builtin serialization mechanism)</Description>
     <Copyright>Copyright Irmen de Jong</Copyright>
-      <!--
     <PackageLicenseExpression>MIT</PackageLicenseExpression> 
-    <PackageLicenseFile>../LICENSE</PackageLicenseFile>
-    --> 
-    <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/irmen/pickle</PackageProjectUrl>
     <RepositoryUrl>https://github.com/irmen/pickle.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>

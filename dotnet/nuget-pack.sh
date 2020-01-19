@@ -2,7 +2,7 @@
 set -e
 
 echo "Building and testing..."
-dotnet test -c Release Razorvine.Pickle/Tests
+dotnet test -c Release Razorvine.Pickle/UnitTests
 
 echo "\n\nCreating nuget release package..."
 dotnet pack -c Release -o $(pwd)/dist Razorvine.Pickle/Pickle

@@ -528,7 +528,7 @@ public class PicklerTests {
 		Hashtable map=(Hashtable) pu.loads(o);
 		
 		Assert.Equal(5, map.Count);
-		Assert.Equal("Pickle.Tests.Pickle.PicklerTests+Relative", map["__class__"]);
+		Assert.Equal("PickleTests.PicklerTests+Relative", map["__class__"]);
 		Assert.Equal("Tupac", map["Name"]);
 		Assert.Equal("unspecified", map["Relation"]);
 		Assert.True((bool) map["Deceased"]);
@@ -620,7 +620,7 @@ public class PicklerTests {
 		
 		Pickler.registerCustomPickler(typeof(AbstractBaseClass), new AnyClassPickler());
 		byte[] data = p.dumps(c);
-		Assert.Contains("[class=Pickle.Tests.Pickle.PicklerTests+ConcreteSubClass]", S(data));
+		Assert.Contains("[class=PickleTests.PicklerTests+ConcreteSubClass]", S(data));
 	}
 	
 	[Fact]
@@ -644,9 +644,9 @@ public class PicklerTests {
 		}
 		Pickler.registerCustomPickler(typeof(IBaseInterface), new AnyClassPickler());
 		byte[] data = p.dumps(b);
-		Assert.Contains("[class=Pickle.Tests.Pickle.PicklerTests+BaseClassWithInterface]", S(data));
+		Assert.Contains("[class=PickleTests.PicklerTests+BaseClassWithInterface]", S(data));
 		data = p.dumps(sub);
-		Assert.Contains("[class=Pickle.Tests.Pickle.PicklerTests+SubClassWithInterface]", S(data));
+		Assert.Contains("[class=PickleTests.PicklerTests+SubClassWithInterface]", S(data));
 	}	
 	
 	
@@ -686,7 +686,7 @@ public class PicklerTests {
 		var u = new Unpickler();
 		IDictionary value = (IDictionary) u.loads(data);
 		Assert.Equal(3, value.Count);
-		Assert.Equal("Pickle.Tests.Pickle.PicklerTests+SerializableThing", value["__class__"]);
+		Assert.Equal("PickleTests.PicklerTests+SerializableThing", value["__class__"]);
 		Assert.Equal(42, value["TakeThisInt"]);
 		Assert.Equal("banana", value["TakeThisOne"]);
 	}

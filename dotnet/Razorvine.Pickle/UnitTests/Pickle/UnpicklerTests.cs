@@ -496,11 +496,23 @@ public class UnpicklerTests {
 		list.Add("b");
 		list.Add(list);//recursive
 		a=(ArrayList) U("(lp0\nS'a'\np1\naS'b'\np2\nag0\na.");
-		Assert.Equal("[a, b, (this Collection), ]", PrettyPrint.printToString(a));
+		Assert.Equal(3, a.Count);
+		Assert.Equal("a", a[0]);
+		Assert.Equal("b", a[1]);
+		Assert.Same(a, a[2]);
 		a=(ArrayList) U("\u0080\u0002]q\u0000(U\u0001aq\u0001U\u0001bq\u0002h\u0000e.");
-		Assert.Equal("[a, b, (this Collection), ]", PrettyPrint.printToString(a));
+		Assert.Equal(3, a.Count);
+		Assert.Equal("a", a[0]);
+		Assert.Equal("b", a[1]);
+		Assert.Same(a, a[2]);
 		a=(ArrayList)U("]q\u0000(]q\u0001(K\u0001K\u0002K\u0003e]q\u0002(h\u0001h\u0001ee.");
-		Assert.Equal("[[1, 2, 3, ], [[1, 2, 3, ], [1, 2, 3, ], ], ]", PrettyPrint.printToString(a));
+		Assert.Equal(2, a.Count);
+		var sa1 = (ArrayList) a[0];
+		var sa2 = (ArrayList) a[1];
+		Assert.Equal(new ArrayList() {1,2,3},  sa1);
+		Assert.Equal(2, sa2.Count);
+		Assert.Same(sa2[0], sa2[1]);
+		Assert.Same(sa1, sa2[0]);
 	}
 	
 	[Fact]
