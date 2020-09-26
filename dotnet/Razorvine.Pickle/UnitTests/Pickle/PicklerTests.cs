@@ -90,6 +90,10 @@ public class PicklerTests {
 		const DayEnum day = DayEnum.Wednesday;
 		o=p.dumps(day);	// enum is returned as just a string representing the value
 		Assert.Equal(B("X\u0009\u0000\u0000\u0000Wednesday"),o);
+		
+		
+		o=p.dumps("tshirt👕");		// t-shirt U+1f455
+		Assert.Equal(B("X\n\u0000\u0000\u0000tshirt\u00f0\u009f\u0091\u0095"),o);
 	}
 	
 	[Fact]

@@ -74,6 +74,11 @@ public class UnpicklerTests {
 		// Protocol 3 (Python 3.x)
 		Assert.Equal(new byte[]{65,66,67}, (byte[]) U("B\u0003\u0000\u0000\u0000ABC."));
 		Assert.Equal(new byte[]{65,66,67}, (byte[]) U("C\u0003ABC."));
+		
+		// high unicode, protocol 1
+		Assert.Equal("tshirt\uD83D\uDC55", (String) U("Vtshirt\\U0001f455\np0\n."));
+		// high unicode, protocol 2 and higher
+		Assert.Equal("tshirt\uD83D\uDC55", (String) U("\u0080\u0002X\n\u0000\u0000\u0000tshirt\u00f0\u009f\u0091\u0095."));
 	}
 	
 	[Fact]

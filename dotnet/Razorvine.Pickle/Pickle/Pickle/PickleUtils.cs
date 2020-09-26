@@ -384,14 +384,31 @@ public static class PickleUtils {
 						sb.Append(c);
 						break;
 					case 'u':
+					{
 						// hex escaped unicode "\u20ac"
-						char h1=str[++i];
-						char h2=str[++i];
-						char h3=str[++i];
-						char h4=str[++i];
-						c2=(char)Convert.ToInt32(""+h1+h2+h3+h4, 16);
+						char h1 = str[++i];
+						char h2 = str[++i];
+						char h3 = str[++i];
+						char h4 = str[++i];
+						c2 = (char) Convert.ToInt32("" + h1 + h2 + h3 + h4, 16);
 						sb.Append(c2);
 						break;
+					}
+					case 'U': {
+						// hex escaped unicode "\U0001f455"
+						char h1 = str[++i];
+						char h2 = str[++i];
+						char h3 = str[++i];
+						char h4 = str[++i];
+						char h5 = str[++i];
+						char h6 = str[++i];
+						char h7 = str[++i];
+						char h8 = str[++i];
+						String encoded = "" + h1 + h2 + h3 + h4 + h5 + h6 + h7 + h8;
+						string s = Char.ConvertFromUtf32(Convert.ToInt32(encoded, 16));
+						sb.Append(s);
+						break;
+					}
 					case 'n':
 						sb.Append('\n');
 						break;
