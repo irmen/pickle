@@ -7,7 +7,7 @@ import java.math.BigInteger;
 
 /**
  * Utility stuff for dealing with pickle data streams.
- * 
+ *
  * @author Irmen de Jong (irmen@razorvine.net)
  */
 public abstract class PickleUtils {
@@ -64,7 +64,7 @@ public abstract class PickleUtils {
 			throw new PickleException("pickle too large, can't read more than maxint");
 		return readbytes(input, (int)n);
 	}
-	
+
 	/**
 	 * read a number of signed bytes into the specified location in an existing byte array
 	 */
@@ -129,7 +129,7 @@ public abstract class PickleUtils {
 		i <<= 8;
 		i |= bytes[offset] & 0xff;
 		return i;
-	}	
+	}
 
 	/**
 	 * Convert 4 little endian bytes into an unsigned int (as a long)
@@ -145,8 +145,8 @@ public abstract class PickleUtils {
 		i <<= 8;
 		i |= bytes[0+offset] & 0xff;
 		return i;
-	}	
-	
+	}
+
 	/**
 	 * Convert a signed integer to its 4-byte representation. (little endian)
 	 */
@@ -187,7 +187,7 @@ public abstract class PickleUtils {
 	}
 
 	/**
-	 * Convert a big endian 8-byte to a double. 
+	 * Convert a big endian 8-byte to a double.
 	 */
 	public static double bytes_to_double(byte[] bytes, int offset) {
 		try {
@@ -213,7 +213,7 @@ public abstract class PickleUtils {
 	}
 
 	/**
-	 * Convert a big endian 4-byte to a float. 
+	 * Convert a big endian 4-byte to a float.
 	 */
 	public static float bytes_to_float(byte[] bytes, int offset) {
 		try {
@@ -228,7 +228,7 @@ public abstract class PickleUtils {
 		} catch (IndexOutOfBoundsException x) {
 			throw new PickleException("decoding float: too few bytes");
 		}
-	}	
+	}
 	/**
 	 * read an arbitrary 'long' number. Returns an int/long/BigInteger as appropriate to hold the number.
 	 */
@@ -242,7 +242,7 @@ public abstract class PickleUtils {
 		BigInteger bigint = new BigInteger(data2);
 		return optimizeBigint(bigint);
 	}
-	
+
 	/**
 	 * encode an arbitrary long number into a byte array (little endian).
 	 */
@@ -254,7 +254,7 @@ public abstract class PickleUtils {
 			data2[data.length - i - 1] = data[i];
 		return data2;
 	}
-	
+
 
 	/**
 	 * Optimize a biginteger, if possible return a long primitive datatype.
@@ -300,7 +300,7 @@ public abstract class PickleUtils {
 	public static byte[] str2bytes(String str) throws IOException {
 		byte[] b=new byte[str.length()];
 		for(int i=0; i<str.length(); ++i) {
-			char c=str.charAt(i);	
+			char c=str.charAt(i);
 			if(c>255) throw new UnsupportedEncodingException("string contained a char > 255, cannot convert to bytes");
 			b[i]=(byte)c;
 		}
@@ -372,15 +372,31 @@ public abstract class PickleUtils {
 						// double-escaped '\\'--> '\'
 						sb.append(c);
 						break;
-					case 'u':
+					case 'u': {
 						// hex escaped unicode "\u20ac"
-						char h1=str.charAt(++i);
-						char h2=str.charAt(++i);
-						char h3=str.charAt(++i);
-						char h4=str.charAt(++i);
-						c2=(char)Integer.parseInt(""+h1+h2+h3+h4, 16);
+						char h1 = str.charAt(++i);
+						char h2 = str.charAt(++i);
+						char h3 = str.charAt(++i);
+						char h4 = str.charAt(++i);
+						c2 = (char) Integer.parseInt("" + h1 + h2 + h3 + h4, 16);
 						sb.append(c2);
 						break;
+					}
+					case 'U': {
+						// hex escaped unicode "\U0001f455"
+						char h1 = str.charAt(++i);
+						char h2 = str.charAt(++i);
+						char h3 = str.charAt(++i);
+						char h4 = str.charAt(++i);
+						char h5 = str.charAt(++i);
+						char h6 = str.charAt(++i);
+						char h7 = str.charAt(++i);
+						char h8 = str.charAt(++i);
+						String encoded = "" + h1 + h2 + h3 + h4 + h5 + h6 + h7 + h8;
+						String s = new String(Character.toChars(Integer.parseInt(encoded, 16)));
+						sb.append(s);
+						break;
+					}
 					case 'n':
 						sb.append('\n');
 						break;

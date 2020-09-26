@@ -107,6 +107,9 @@ public class PicklerTest {
 		DayEnum day=DayEnum.WEDNESDAY;
 		o=p.dumps(day);	// enum is returned as just a string representing the value
 		assertArrayEquals(B("X\u0009\u0000\u0000\u0000WEDNESDAY"),o);
+
+		o=p.dumps("tshirt\uD83D\uDC55");		// t-shirt U+1f455
+		assertArrayEquals(B("X\n\u0000\u0000\u0000tshirt\u00f0\u009f\u0091\u0095"),o);
 	}
 
 	@Test

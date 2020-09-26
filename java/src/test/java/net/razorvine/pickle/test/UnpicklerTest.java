@@ -99,6 +99,11 @@ public class UnpicklerTest {
 		// Protocol 3 (Python 3.x)
 		assertArrayEquals(new byte[]{'a','b','c'}, (byte[]) U("B\u0003\u0000\u0000\u0000abc."));
 		assertArrayEquals(new byte[]{'a','b','c'}, (byte[]) U("C\u0003abc."));
+
+		// high unicode, protocol 1
+		assertEquals("tshirt\uD83D\uDC55", (String) U("Vtshirt\\U0001f455\np0\n."));
+		// high unicode, protocol 2 and higher
+		assertEquals("tshirt\uD83D\uDC55", (String) U("\u0080\u0002X\n\u0000\u0000\u0000tshirt\u00f0\u009f\u0091\u0095."));
 	}
 
 	@Test
