@@ -9,7 +9,7 @@
 
 	<groupId>net.razorvine</groupId>
 	<artifactId>pickle</artifactId>
-	<version>1.1-SNAPSHOT</version>
+	<version>1.1</version>
 	<packaging>jar</packaging>
 
 	<name>pickle</name>
@@ -67,7 +67,7 @@
 		<url>https://github.com/irmen/pickle</url>
 		<connection>scm:git:https://github.com/irmen/pickle.git</connection>
 		<developerConnection>scm:git:https://github.com/irmen/pickle.git</developerConnection>
-		<tag>HEAD</tag>
+		<tag>pickle-1.1</tag>
 	</scm>
 	<issueManagement>
 		<system>Github</system>
