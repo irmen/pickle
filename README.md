@@ -30,6 +30,16 @@ including protocol version 1 support. Protocols 3 and 4 contain some nice new
 features which may eventually be utilized (protocol 5 is quite obscure),
 but for now, only version 2 is used.
 
+## Size limitations
+
+Unlike Python where the length of strings and (byte)arrays is only limited by the available memory,
+Java and .NET do have an arbitrary maximum object size.
+The maximum length of strings and byte arrays of both platforms is limited to 2 gigabytes (2^31 - 1).
+This is not a Pickle library limitation, this is a limitation of the underlying platform.
+If an object in your pickle exceeds this limit the code will crash with something like an
+``NegativeArraySizeException``, ``OverflowException`` or perhaps an out of memory error of some sort.
+You should make sure in your own code that the size of the pickled objects does not exceed 2 gigabyte.
+
 
 ## Type Mapping
 
