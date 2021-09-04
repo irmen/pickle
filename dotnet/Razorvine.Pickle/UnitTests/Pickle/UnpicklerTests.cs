@@ -238,10 +238,21 @@ public class UnpicklerTests {
 	}
 	
 	[Fact]
-	public void TestDecimal() 
+	public void TestDecimal()
 	{
 		Assert.Equal(12345.6789m, U("cdecimal\nDecimal\np0\n(S'12345.6789'\np1\ntp2\nRp3\n."));
 		Assert.Equal(12345.6789m, U("\u0080\u0002cdecimal\nDecimal\nU\n12345.6789\u0085R."));
+	}
+
+	[Fact]
+	public void TestFloatDecimalNaN()
+	{
+		var floatNaN = U("\u0080\u0005\u0095\n\u0000\u0000\u0000\u0000\u0000\u0000\u0000G\u007f\u00f8\u0000\u0000\u0000\u0000\u0000\u0000.");
+		Assert.IsType<double>(floatNaN);
+		Assert.True(double.IsNaN((double)floatNaN));
+		var decimalNaN = U("\u0080\u0005\u0095!\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u008c\u0007decimal\u0094\u008c\u0007Decimal\u0094\u0093\u0094\u008c\u0003NaN\u0094\u0085\u0094R\u0094.");
+		Assert.IsType<double>(decimalNaN);
+		Assert.True(double.IsNaN((double)floatNaN));
 	}
 
 	[Fact]

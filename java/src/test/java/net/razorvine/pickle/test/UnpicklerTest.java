@@ -223,6 +223,17 @@ public class UnpicklerTest {
 	}
 
 	@Test
+	public void testFloatDecimalNaN() throws PickleException, IOException
+	{
+		Object floatNaN = U("\u0080\u0005\u0095\n\u0000\u0000\u0000\u0000\u0000\u0000\u0000G\u007f\u00f8\u0000\u0000\u0000\u0000\u0000\u0000.");
+		assertEquals(Double.class, floatNaN.getClass());
+		assertTrue(((Double) floatNaN).isNaN());
+		Object decimalNaN = U("\u0080\u0005\u0095!\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u008c\u0007decimal\u0094\u008c\u0007Decimal\u0094\u0093\u0094\u008c\u0003NaN\u0094\u0085\u0094R\u0094.");
+		assertEquals(Double.class, decimalNaN.getClass());
+		assertTrue(((Double) decimalNaN).isNaN());
+	}
+
+	@Test
 	public void testDateTime() throws PickleException, IOException
 	{
 		Calendar c=new GregorianCalendar(2011, Calendar.DECEMBER, 31);

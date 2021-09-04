@@ -14,8 +14,15 @@ public class DecimalConstructor : IObjectConstructor
 {
 	public object construct(object[] args)
 	{
-		if(args.Length==1 && args[0] is string) {
-			return Convert.ToDecimal((string)args[0], CultureInfo.InvariantCulture);
+		if(args.Length==1 && args[0] is string)
+		{
+			string stringArg = (string)args[0];
+			if (stringArg.ToLowerInvariant()=="nan")
+			{
+				// special case Decimal("NaN") which is not supported in .NET, return this as double.NaN
+				return double.NaN;
+			}
+			return Convert.ToDecimal(stringArg, CultureInfo.InvariantCulture);
 		}
 
 		throw new PickleException("invalid arguments for decimal constructor");

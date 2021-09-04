@@ -70,7 +70,7 @@ set                | java.util.Set
 dict               | java.util.Map
 bytes              | byte[]
 bytearray          | byte[]
-decimal            | BigDecimal
+decimal            | BigDecimal (except NaN which is mapped to Double.NaN)
 custom class       | Map<String, Object>  (dict with class attributes including its name in "__class__")
 Pyro4.core.URI     | net.razorvine.pyro.PyroURI
 Pyro4.core.Proxy   | net.razorvine.pyro.PyroProxy
@@ -141,7 +141,7 @@ set                 | HashSet<object>
 dict                | Hashtable (key=object, value=object)
 bytes               | ubyte[]
 bytearray           | ubyte[]
-decimal             | decimal
+decimal             | decimal (except NaN which is mapped to double.NaN)
 custom class        | IDictionary<string, object>  (dict with class attributes including its name in "__class__")
 Pyro4.core.URI      | Razorvine.Pyro.PyroURI
 Pyro4.core.Proxy    | Razorvine.Pyro.PyroProxy
