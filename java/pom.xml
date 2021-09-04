@@ -65,8 +65,8 @@
 	</dependencies>
 	<scm>
 		<url>https://github.com/irmen/pickle</url>
-		<connection>scm:git:https://github.com/irmen/pickle.git</connection>
-		<developerConnection>scm:git:https://github.com/irmen/pickle.git</developerConnection>
+		<connection>scm:git:ssh://git@github.com/irmen/pickle.git</connection>
+		<developerConnection>scm:git:ssh://git@github.com/irmen/pickle.git</developerConnection>
 		<tag>HEAD</tag>
 	</scm>
 	<issueManagement>
