@@ -22,7 +22,9 @@ public class DecimalConstructor : IObjectConstructor
 				// special case Decimal("NaN") which is not supported in .NET, return this as double.NaN
 				return double.NaN;
 			}
-			return Convert.ToDecimal(stringArg, CultureInfo.InvariantCulture);
+			return Decimal.Parse(stringArg, 
+				NumberStyles.AllowLeadingSign | NumberStyles.AllowDecimalPoint | NumberStyles.AllowExponent, 
+				CultureInfo.InvariantCulture);
 		}
 
 		throw new PickleException("invalid arguments for decimal constructor");

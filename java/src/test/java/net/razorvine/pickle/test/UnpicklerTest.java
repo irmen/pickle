@@ -220,6 +220,8 @@ public class UnpicklerTest {
 	{
 		assertEquals(new BigDecimal("12345.6789"), U("cdecimal\nDecimal\np0\n(S'12345.6789'\np1\ntp2\nRp3\n."));
 		assertEquals(new BigDecimal("12345.6789"), U("\u0080\u0002cdecimal\nDecimal\nU\n12345.6789\u0085R."));
+		assertEquals(new BigDecimal("-5e-10"), U("\u0080\u0002cdecimal\nDecimal\nq\u0000X\u0006\u0000\u0000\u0000-5E-10q\u0001\u0085q\u0002Rq\u0003."));
+		assertEquals(new BigDecimal("5e10"), U("\u0080\u0002cdecimal\nDecimal\nq\u0000X\u0005\u0000\u0000\u00005E+10q\u0001\u0085q\u0002Rq\u0003."));
 	}
 
 	@Test
