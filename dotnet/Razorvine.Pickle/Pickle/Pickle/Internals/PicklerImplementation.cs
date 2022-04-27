@@ -642,6 +642,7 @@ namespace Razorvine.Pickle
             }
 
             // int too big, store it as text
+            // todo use System.Generics.BigInteger
             output.WriteByte(Opcodes.INT);
             byte[] bytes = Encoding.ASCII.GetBytes(v.ToString(CultureInfo.InvariantCulture));
             output.Write(bytes, 0, bytes.Length);
@@ -657,6 +658,7 @@ namespace Razorvine.Pickle
             else
             {
                 // ulong too big for a signed long, store it as text instead.
+                // todo use System.Generics.BigInteger
                 output.WriteByte(Opcodes.INT);
                 var bytes = Encoding.ASCII.GetBytes(u.ToString(CultureInfo.InvariantCulture));
                 output.Write(bytes, 0, bytes.Length);

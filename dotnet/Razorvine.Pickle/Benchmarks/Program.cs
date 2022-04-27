@@ -12,8 +12,8 @@ namespace Benchmarks
             => BenchmarkSwitcher
                 .FromAssembly(typeof(Program).Assembly)
                 .Run(args, DefaultConfig.Instance
-                    .With(MemoryDiagnoser.Default)
-                    .With(JsonExporter.Full)
-                    .With(Job.ShortRun.AsDefault()));
+                    .AddDiagnoser(MemoryDiagnoser.Default)
+                    .AddExporter(JsonExporter.Full)
+                    .AddJob(Job.ShortRun.AsDefault()));
     }
 }

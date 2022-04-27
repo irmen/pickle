@@ -79,6 +79,7 @@ public class PicklerTests {
 		o=p.dumps(0xf2345678);
 		Assert.Equal(B("I4063516280\n"), o);
 		o=p.dumps(0x12345678abcdefL);
+		// TODO use LONG1 result once BigInteger support is in: Assert.Equal(B("\u008a\u0007\u00ef\u00cd\u00abxV4\u0012"), o);
 		Assert.Equal(B("I5124095577148911\n"), o);
 		o=p.dumps(1234.5678d);
 		Assert.Equal(B(new byte[] {(byte)'G',0x40,0x93,0x4a,0x45,0x6d,0x5c,0xfa,0xad}), o);

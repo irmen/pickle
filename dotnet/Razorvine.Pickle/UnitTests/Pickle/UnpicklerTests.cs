@@ -69,8 +69,10 @@ public class UnpicklerTests {
 		// protocol level2
 		Assert.True((bool)U("\u0088."));	// True
 		Assert.False((bool)U("\u0089."));	// False
-		//Assert.Equal(12345678987654321L, U("\u008a\u0007\u00b1\u00f4\u0091\u0062\u0054\u00dc\u002b."));
-		//Assert.Equal(12345678987654321L, U("\u008b\u0007\u0000\u0000\u0000\u00b1\u00f4\u0091\u0062\u0054\u00dc\u002b."));
+		Assert.Equal(123456789123456789L, U("\u008a\u0008\u0015_\u00d0\u00acK\u009b\u00b6\u0001."));   // LONG1 encoded long
+		// var bigLong = (long) U("\u008a\u000f\u0015_\u0004\u0084ft\u00adE\u0090\u00f82\u00c0\u00e3\u00c6\u0017.");	// LONG1 encoded long, but requires BigInteger support
+		Assert.Equal(12345678987654321L, U("\u008a\u0007\u00b1\u00f4\u0091\u0062\u0054\u00dc\u002b."));
+		Assert.Equal(12345678987654321L, U("\u008b\u0007\u0000\u0000\u0000\u00b1\u00f4\u0091\u0062\u0054\u00dc\u002b."));	// LONG4 encoded long
 		// Protocol 3 (Python 3.x)
 		Assert.Equal(new byte[]{65,66,67}, (byte[]) U("B\u0003\u0000\u0000\u0000ABC."));
 		Assert.Equal(new byte[]{65,66,67}, (byte[]) U("C\u0003ABC."));
