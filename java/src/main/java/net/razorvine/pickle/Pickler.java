@@ -733,10 +733,8 @@ public class Pickler {
             return;
 		}
 
-		// int too big, store it as text
-		out.write(Opcodes.INT);
-		out.write((""+v).getBytes());
-		out.write('\n');
+		// int too big, use bigint to store it as LONG1
+		put_bigint(BigInteger.valueOf(v));
 	}
 
 	void put_bool(boolean b) throws IOException {

@@ -98,7 +98,7 @@ public class PicklerTest {
 		o=p.dumps(0x12345678);
 		assertArrayEquals(B("J\u0078\u0056\u0034\u0012"), o);
 		o=p.dumps(0x12345678abcdefL);
-		assertArrayEquals(B("I5124095577148911\n"), o);
+		assertArrayEquals(B("\u008a\u0007\u00ef\u00cd\u00abxV4\u0012"), o);
 		o=p.dumps(1234.5678d);
 		assertArrayEquals(B(new short[] {'G',0x40,0x93,0x4a,0x45,0x6d,0x5c,0xfa,0xad}), o);
 		o=p.dumps(1234.5f);

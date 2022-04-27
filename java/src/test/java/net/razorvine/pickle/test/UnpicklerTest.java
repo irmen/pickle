@@ -96,6 +96,10 @@ public class UnpicklerTest {
 		assertEquals(Boolean.FALSE,U("\u0089."));	// False
 		assertEquals(12345678987654321L, U("\u008a\u0007\u00b1\u00f4\u0091\u0062\u0054\u00dc\u002b."));
 		assertEquals(12345678987654321L, U("\u008b\u0007\u0000\u0000\u0000\u00b1\u00f4\u0091\u0062\u0054\u00dc\u002b."));
+		assertEquals(123456789123456789L, U("\u008a\u0008\u0015_\u00d0\u00acK\u009b\u00b6\u0001."));   // LONG1 encoded long
+		BigInteger bigLong = (BigInteger) U("\u008a\u000f\u0015_\u0004\u0084ft\u00adE\u0090\u00f82\u00c0\u00e3\u00c6\u0017.");	// LONG1 encoded long
+		assertEquals(new BigInteger("123456789123456789123456789123456789"), bigLong);
+		assertEquals(12345678987654321L, U("\u008b\u0007\u0000\u0000\u0000\u00b1\u00f4\u0091\u0062\u0054\u00dc\u002b."));	// LONG4 encoded long
 		// Protocol 3 (Python 3.x)
 		assertArrayEquals(new byte[]{'a','b','c'}, (byte[]) U("B\u0003\u0000\u0000\u0000abc."));
 		assertArrayEquals(new byte[]{'a','b','c'}, (byte[]) U("C\u0003abc."));
