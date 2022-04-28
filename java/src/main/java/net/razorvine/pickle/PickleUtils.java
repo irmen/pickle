@@ -295,7 +295,7 @@ public abstract class PickleUtils {
 	}
 
 	/**
-	 * Convert a string to a byte array, no encoding is used. String must only contain characters <256.
+	 * Convert a string to a byte array, no encoding is used. String must only contain characters less than 256.
 	 */
 	public static byte[] str2bytes(String str) throws IOException {
 		byte[] b=new byte[str.length()];
