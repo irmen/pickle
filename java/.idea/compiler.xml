@@ -7,16 +7,16 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="java" />
-        <module name="Pickle" />
+        <module name="pickle" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="Pickle" target="1.8" />
+      <module name="pickle" target="1.8" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="Pickle" options="-Xlint:all" />
+      <module name="pickle" options="-Xlint:all" />
     </option>
   </component>
 </project>

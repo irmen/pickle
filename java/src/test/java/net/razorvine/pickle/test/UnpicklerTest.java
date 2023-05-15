@@ -499,6 +499,15 @@ public class UnpicklerTest {
 	}
 
 	@Test
+	public void testUnpickleEmptyBytes() throws IOException {
+		byte[] pickled = new byte[] {
+				(byte)128, 2, 99, 95, 95, 98, 117, 105, 108, 116, 105, 110, 95, 95, 10, 98, 121, 116, 101, 115, 10, 113, 0, 41, 82, 113, 1, 46
+		};
+		byte[] obj = (byte[]) (new Unpickler().loads(pickled));
+		assertEquals(0, obj.length);
+	}
+
+	@Test
 	public void testArray() throws PickleException, IOException
 	{
 		// c=char

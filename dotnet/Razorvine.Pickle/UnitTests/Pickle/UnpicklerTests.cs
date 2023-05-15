@@ -408,6 +408,15 @@ public class UnpicklerTests {
 	}
 	
 	[Fact]
+	public void TestUnpickleEmptyBytes() {
+		byte[] pickled = {
+			128, 2, 99, 95, 95, 98, 117, 105, 108, 116, 105, 110, 95, 95, 10, 98, 121, 116, 101, 115, 10, 113, 0, 41, 82, 113, 1, 46
+		};
+		byte[] obj = (byte[]) (new Unpickler().loads(pickled));
+		Assert.Empty(obj);
+	}
+
+	[Fact]
 	public void TestArray() 
 	{
 		// c=char -->char
