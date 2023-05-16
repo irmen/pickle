@@ -17,7 +17,7 @@ public class ByteArrayConstructor : IObjectConstructor {
 		// args for bytearray constructor (from python3 bytes): [ ArrayList ] or just [byte[]] (when it uses BINBYTES opcode)
 		// or, zero arguments: empty bytearray.
 		if (args.Length>2)
-			throw new PickleException("invalid pickle data for bytearray; expected 1 or 2 args, got "+args.Length);
+			throw new PickleException("invalid pickle data for bytearray; expected 0, 1 or 2 args, got "+args.Length);
 
 		if (args.Length == 0)
 			return new byte[]{};
