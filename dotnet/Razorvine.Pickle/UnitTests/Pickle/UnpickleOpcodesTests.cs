@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Numerics;
 using System.Text;
 using Razorvine.Pickle;
 using Razorvine.Pickle.Objects;
@@ -163,13 +164,7 @@ public class UnpickleOpcodesTests: IDisposable {
 		Assert.Equal(1234567890L, U("L1234567890\n."));
 		Assert.Equal(1234567890123456L, U("L1234567890123456\n."));
 		Assert.Equal(-1234567890123456L, U("L-1234567890123456\n."));
-		//Assert.Equal(new BigInteger("1234567890123456789012345678901234567890"), U("L1234567890123456789012345678901234567890\n."));
-		try {
-			U("L1234567890123456789012345678901234567890\n.");
-			Assert.True(false, "expected pickle exception because c# doesn't have bigint");
-		} catch (PickleException) {
-			// ok
-		}
+		Assert.Equal(BigInteger.Parse("1234567890123456789012345678901234567890"), U("L1234567890123456789012345678901234567890\n."));
 		try {
 			U("I1?0\n.");
 			Assert.True(false, "expected numberformat exception");
@@ -689,13 +684,8 @@ public class UnpickleOpcodesTests: IDisposable {
 		Assert.Equal(0xf2345678L, U("\u008a\u0005\u0078\u0056\u0034\u00f2\u0000."));
 
 		Assert.Equal(0x0102030405060708L, u.loads(new byte[] {Opcodes.LONG1,0x08,0x08,0x07,0x06,0x05,0x04,0x03,0x02,0x01,Opcodes.STOP}));
-		//BigInteger big=new BigInteger("010203040506070809",16);
-		try {
-			u.loads(new byte[] {Opcodes.LONG1,0x09,0x09,0x08,0x07,0x06,0x05,0x04,0x03,0x02,0x01,Opcodes.STOP});
-			Assert.True(false, "expected PickleException due to number overflow");
-		} catch (PickleException) {
-			// ok
-		}
+		var bigInt = u.loads(new byte[] {Opcodes.LONG1,0x09,0x09,0x08,0x07,0x06,0x05,0x04,0x03,0x02,0x01,Opcodes.STOP});
+		Assert.Equal(BigInteger.Parse("18591708106338011145"), bigInt);
 	}
 
 	[Fact]
@@ -716,13 +706,8 @@ public class UnpickleOpcodesTests: IDisposable {
 		Assert.Equal(0xf2345678L, U("\u008b\u0005\u0000\u0000\u0000\u0078\u0056\u0034\u00f2\u0000."));
 
 		Assert.Equal(0x0102030405060708L, u.loads(new byte[] {Opcodes.LONG4,0x08, 0x00, 0x00, 0x00,0x08,0x07,0x06,0x05,0x04,0x03,0x02,0x01,Opcodes.STOP}));
-		//BigInteger big=new BigInteger("010203040506070809",16);
-		try {
-			u.loads(new byte[] {Opcodes.LONG4,0x09, 0x00, 0x00, 0x00,0x09,0x08,0x07,0x06,0x05,0x04,0x03,0x02,0x01,Opcodes.STOP});
-			Assert.True(false, "expected PickleException due to number overflow");
-		} catch (PickleException) {
-			// ok
-		}
+		var bigInt = u.loads(new byte[] {Opcodes.LONG4,0x09, 0x00, 0x00, 0x00,0x09,0x08,0x07,0x06,0x05,0x04,0x03,0x02,0x01,Opcodes.STOP});
+		Assert.Equal(BigInteger.Parse("18591708106338011145"), bigInt);
 	}
 
 	[Fact]

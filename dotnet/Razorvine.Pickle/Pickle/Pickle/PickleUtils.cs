@@ -4,6 +4,7 @@ using System;
 using System.Buffers.Binary;
 using System.Diagnostics;
 using System.IO;
+using System.Numerics;
 using System.Text;
 // ReSharper disable InconsistentNaming
 // ReSharper disable InvertIf
@@ -236,11 +237,12 @@ public static class PickleUtils {
 	 * because c# doesn't have a bigint, we look if stuff fits into a regular long,
 	 * and raise an exception if it's bigger.
 	 */
-	public static long decode_long(ReadOnlySpan<byte> data) {
+	public static IComparable decode_long(ReadOnlySpan<byte> data) {
 		if (data.Length == 0)
 			return 0L;
-		if (data.Length>8)
-			throw new PickleException("value too large for long, biginteger needed");
+		if (data.Length > 8)
+			return new BigInteger(data.ToArray());
+
 		if( data.Length<8) {
 			// bitconverter requires exactly 8 bytes so we need to extend it
 			var larger=new byte[8];

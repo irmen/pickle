@@ -7,6 +7,7 @@ using System.Buffers.Text;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Numerics;
 using System.Reflection;
 
 namespace Razorvine.Pickle
@@ -389,9 +390,13 @@ namespace Razorvine.Pickle
             {
                 stack.add(longvalue);
             }
+            else if(BigInteger.TryParse(val, out BigInteger bigInteger))
+            {
+                stack.add(bigInteger);
+            }
             else
             {
-                throw new PickleException("long too large in load_long (need BigInt)");
+                throw new PickleException("long too large in load_long");
             }
         }
 

@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Numerics;
 using System.Text;
 using Xunit;
 using Razorvine.Pickle;
@@ -54,7 +55,7 @@ public class UnpicklerTests {
 		Assert.Equal(255,U("K\u00ff."));   // unsigned int
 		Assert.Equal(1234L,U("L1234\n.")); // long (as long)
 		Assert.Equal(12345678987654321L,U("L12345678987654321L\n.")); // long (as long)
-		// Assert.Equal(new BigInteger("9999888877776666555544443333222211110000"),U("L9999888877776666555544443333222211110000L\n.")); // long (as bigint)
+		Assert.Equal(BigInteger.Parse("9999888877776666555544443333222211110000"),U("L9999888877776666555544443333222211110000L\n.")); // long (as bigint)
 		Assert.Equal(12345,U("M90."));	// 2 byte unsigned
 		Assert.Equal(65535,U("M\u00ff\u00ff."));	// 2 byte unsigned
 		Assert.Equal("Foobar",U("S'Foobar'\n."));  // string with quotes
@@ -70,7 +71,8 @@ public class UnpicklerTests {
 		Assert.True((bool)U("\u0088."));	// True
 		Assert.False((bool)U("\u0089."));	// False
 		Assert.Equal(123456789123456789L, U("\u008a\u0008\u0015_\u00d0\u00acK\u009b\u00b6\u0001."));   // LONG1 encoded long
-		// var bigLong = (long) U("\u008a\u000f\u0015_\u0004\u0084ft\u00adE\u0090\u00f82\u00c0\u00e3\u00c6\u0017.");	// LONG1 encoded long, but requires BigInteger support
+		var bigLong = (BigInteger) U("\u008a\u000f\u0015_\u0004\u0084ft\u00adE\u0090\u00f82\u00c0\u00e3\u00c6\u0017.");	// LONG1 encoded long as BigInteger
+		Assert.Equal(BigInteger.Parse("123456789123456789123456789123456789"), bigLong);
 		Assert.Equal(12345678987654321L, U("\u008a\u0007\u00b1\u00f4\u0091\u0062\u0054\u00dc\u002b."));
 		Assert.Equal(12345678987654321L, U("\u008b\u0007\u0000\u0000\u0000\u00b1\u00f4\u0091\u0062\u0054\u00dc\u002b."));	// LONG4 encoded long
 		// Protocol 3 (Python 3.x)
