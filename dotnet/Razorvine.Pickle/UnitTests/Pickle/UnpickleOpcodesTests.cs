@@ -202,11 +202,13 @@ public class UnpickleOpcodesTests: IDisposable {
 
 	private class PersistentIdUnpickler : Unpickler
 	{
-		protected override object persistentLoad(string pid)
+		protected override object persistentLoad(object pid)
 		{
-			if(pid=="9999")
+			string spid = pid.ToString();
+
+			if(spid=="9999")
 				return "PersistentObject";
-			throw new ArgumentException("unknown persistent_id "+pid);
+			throw new ArgumentException("unknown persistent_id "+spid);
 		}
 	}
 	
