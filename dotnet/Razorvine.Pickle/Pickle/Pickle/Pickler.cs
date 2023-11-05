@@ -130,5 +130,16 @@ namespace Razorvine.Pickle
                 // check if there's a custom pickler registered for an interface or abstract base class
                 // that this object implements or inherits from.
                 : customPicklers.FirstOrDefault(x => x.Key.IsAssignableFrom(t)).Value;
+
+        /// <summary>
+        /// Method can be overridden to allow for persistentId specification.
+        /// </summary>
+        /// <param name="pid">The original value</param>
+        /// <param name="newpid">The new value to save</param>
+        /// <returns>Whether a persistentId is being used</returns>
+        protected internal virtual bool persistentId(object pid, out object newpid) {
+            newpid = null;
+            return false;
+        }
     }
 }
