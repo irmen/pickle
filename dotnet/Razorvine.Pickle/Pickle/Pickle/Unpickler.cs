@@ -133,7 +133,7 @@ public class Unpickler : IDisposable {
 		throw new PickleException("pickle stream refers to out-of-band data but no user-overridden nextBuffer() method is used\n");
 	}
 	
-	protected internal virtual object persistentLoad(string pid)
+	protected internal virtual object persistentLoad(object pid)
 	{
 		throw new PickleException("A load persistent id instruction was encountered, but no persistentLoad function was specified. (implement it in custom Unpickler subclass)");
 	}
