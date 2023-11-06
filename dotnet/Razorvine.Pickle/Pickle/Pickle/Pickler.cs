@@ -23,6 +23,7 @@ namespace Razorvine.Pickle
         public const int PROTOCOL = 2;
 
         protected static readonly IDictionary<Type, IObjectPickler> customPicklers = new Dictionary<Type, IObjectPickler>();
+        protected static readonly IDictionary<Type, IObjectDeconstructor> customDeconstructors = new Dictionary<Type, IObjectDeconstructor>();
         protected readonly bool useMemo = true;
         private IPicklerImplementation _picklerImplementation;
 
@@ -60,6 +61,16 @@ namespace Razorvine.Pickle
         /// <param name="clazz">the custom class</param>
         /// <param name="pickler">additional object picklers</param>
         public static void registerCustomPickler(Type clazz, IObjectPickler pickler) => customPicklers[clazz] = pickler;
+
+        /// <summary>
+        /// Register custom object deconstructor for custom classes.
+        /// An alternative for writing your own pickler, you can create a deconstructor which will have a 
+        /// name & module, and the deconstructor will convert an object to a list of objects which will then
+        /// be used as the arguments for reconstructing when unpickling.
+        /// </summary>
+        /// <param name="clazz">the custom class</param>
+        /// <param name="pickler">additional object deconstructor</param>
+        public static void registerCustomDeconstructor(Type clazz, IObjectDeconstructor deconstructor) => customDeconstructors[clazz] = deconstructor;
 
         /// <summary>
         /// Pickle a given object graph, returning the result as a byte array.
@@ -130,6 +141,10 @@ namespace Razorvine.Pickle
                 // check if there's a custom pickler registered for an interface or abstract base class
                 // that this object implements or inherits from.
                 : customPicklers.FirstOrDefault(x => x.Key.IsAssignableFrom(t)).Value;
+
+        protected internal IObjectDeconstructor getCustomDeconstructor(Type t)
+            => customDeconstructors.TryGetValue(t, out var deconstructor)
+                ? deconstructor : null;
 
         /// <summary>
         /// Method can be overridden to allow for persistentId specification.

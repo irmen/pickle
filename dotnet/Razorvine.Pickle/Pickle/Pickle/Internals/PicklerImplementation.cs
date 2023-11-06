@@ -245,9 +245,6 @@ namespace Razorvine.Pickle
                         else
                             put_enumerable(v);
                         return true;
-                    case IDeconstructedObject v:
-                        put_global(v);
-                        return true;
                 }
             }
 
@@ -258,6 +255,13 @@ namespace Razorvine.Pickle
                 // to support this scenario this type derives from Stream and implements Write methods
                 custompickler.pickle(o, this, pickler);
                 WriteMemo(o);
+                return true;
+            }
+
+            IObjectDeconstructor customDeconstructor = pickler.getCustomDeconstructor(t);
+            if (customDeconstructor != null) 
+            {
+                put_global(customDeconstructor, o);
                 return true;
             }
 
@@ -301,17 +305,18 @@ namespace Razorvine.Pickle
 
         private static bool hasPublicProperties(Type t) => t.GetProperties().Length > 0;
 
-        private void put_global(IDeconstructedObject global) {
+        private void put_global(IObjectDeconstructor deconstructor, object obj) {
             output.WriteByte(Opcodes.GLOBAL);
-            var nameBytes = Encoding.ASCII.GetBytes($"{global.get_module()}\n{global.get_name()}\n");
+            var nameBytes = Encoding.ASCII.GetBytes($"{deconstructor.get_module()}\n{deconstructor.get_name()}\n");
             output.Write(nameBytes, 0, nameBytes.Length);
 
-            if (global.has_value()) {
-                save(global.get_values());
+            var values = deconstructor.deconstruct(obj);
+            if (values.Length > 0) {
+                save(values);
                 output.WriteByte(Opcodes.REDUCE);
             }
 
-            WriteMemo(global);
+            WriteMemo(obj);
         }
 
         private void put_datetime(DateTime dt)

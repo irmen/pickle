@@ -752,10 +752,11 @@ public class PicklerTests {
 	[Fact]
 	public void TestCustomDeconstructedObject() {
 		var obj = new[] {
-			new DeconstructedPersistentClass(new PersistentClass() { Key = 11 }),
-			new DeconstructedPersistentClass(new PersistentClass() { Key = 22 }),
+			new PersistentClass() { Key = 11 },
+			new PersistentClass() { Key = 22 },
 		};
         var p = new Pickler();
+		Pickler.registerCustomDeconstructor(typeof(PersistentClass), new PersistentClassDeconstructor());
         byte[] data = p.dumps(obj);
 
         var u = new Unpickler();
@@ -771,11 +772,7 @@ public class PicklerTests {
 			return new PersistentClass() { Key = (int)args[0] };
         }
     }
-    class DeconstructedPersistentClass : IDeconstructedObject {
-		public PersistentClass _obj;
-		public DeconstructedPersistentClass(PersistentClass obj) {
-			_obj = obj;
-		}
+    class PersistentClassDeconstructor : IObjectDeconstructor {
         public string get_module() {
 			return "UnitTests";
         }
@@ -784,12 +781,8 @@ public class PicklerTests {
 			return "PersistentClass";
         }
 
-        public object[] get_values() {
-			return new object[] { _obj.Key };
-        }
-
-        public bool has_value() {
-				return _obj != null;
+        public object[] deconstruct(object obj) {
+			return new object[] { ((PersistentClass)obj).Key };
         }
     }
 }
