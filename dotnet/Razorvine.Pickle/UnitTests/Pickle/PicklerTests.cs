@@ -714,9 +714,9 @@ public class PicklerTests {
     [Fact]
     public void TestStringPersistentID() {
         var obj = new[] {
-			new PersistentClass() { Key = 11 },
-			new PersistentClass() { Key = 22 },
-		};
+            new PersistentClass() { Key = 11 },
+            new PersistentClass() { Key = 22 },
+        };
         var p = new PersistentIDPickler(false);
         byte[] data = p.dumps(obj);
 
@@ -728,84 +728,84 @@ public class PicklerTests {
     }
 
     [Fact]
-	public void TestObjectPersistentID() {
-		var obj = new[] {
-			new PersistentClass() { Key = 11 },
-			new PersistentClass() { Key = 22 },
-		};
+    public void TestObjectPersistentID() {
+        var obj = new[] {
+            new PersistentClass() { Key = 11 },
+            new PersistentClass() { Key = 22 },
+        };
         var p = new PersistentIDPickler(true);
         byte[] data = p.dumps(obj);
 
         var u = new PersistentIDUnpickler(true);
         var value = (object[])u.loads(data);
 
-		Assert.Equal(11, ((PersistentClass)value[0]).Key);
+        Assert.Equal(11, ((PersistentClass)value[0]).Key);
         Assert.Equal(22, ((PersistentClass)value[1]).Key);
     }
 
-	class PersistentClass {
-		public int Key = 22;
-	}
-	class PersistentIDPickler : Pickler {
-		private bool _idAsObject;
-		public PersistentIDPickler(bool idAsObject) {
-			_idAsObject = idAsObject;
-		}
+    class PersistentClass {
+        public int Key = 22;
+    }
+    class PersistentIDPickler : Pickler {
+        private bool _idAsObject;
+        public PersistentIDPickler(bool idAsObject) {
+            _idAsObject = idAsObject;
+        }
         protected override bool persistentId(object pid, out object newpid) {
             if (pid is PersistentClass opid) {
-				newpid = _idAsObject ? opid.Key : (object)opid.Key.ToString();
-				return true;
-			}
-			newpid = null;
-			return false;
-		}
+                newpid = _idAsObject ? opid.Key : (object)opid.Key.ToString();
+                return true;
+            }
+            newpid = null;
+            return false;
+        }
     }
-	class PersistentIDUnpickler : Unpickler {
-		private bool _idAsObject;
-		public PersistentIDUnpickler(bool idAsObject) {
-			_idAsObject = idAsObject;
-		}
-		protected override object persistentLoad(object pid) {
-			return new PersistentClass() {
-				Key = _idAsObject ? (int)pid : int.Parse((string)pid)
-			};
+    class PersistentIDUnpickler : Unpickler {
+        private bool _idAsObject;
+        public PersistentIDUnpickler(bool idAsObject) {
+            _idAsObject = idAsObject;
+        }
+        protected override object persistentLoad(object pid) {
+            return new PersistentClass() {
+                Key = _idAsObject ? (int)pid : int.Parse((string)pid)
+            };
         }
     }
 
-	[Fact]
-	public void TestCustomDeconstructedObject() {
-		var obj = new[] {
-			new PersistentClass() { Key = 11 },
-			new PersistentClass() { Key = 22 },
-		};
+    [Fact]
+    public void TestCustomDeconstructedObject() {
+        var obj = new[] {
+            new PersistentClass() { Key = 11 },
+            new PersistentClass() { Key = 22 },
+        };
         var p = new Pickler();
-		Pickler.registerCustomDeconstructor(typeof(PersistentClass), new PersistentClassDeconstructor());
+        Pickler.registerCustomDeconstructor(typeof(PersistentClass), new PersistentClassDeconstructor());
         byte[] data = p.dumps(obj);
 
         var u = new Unpickler();
-		Unpickler.registerConstructor("UnitTests", "PersistentClass", new PersistentClassConstructor());
+        Unpickler.registerConstructor("UnitTests", "PersistentClass", new PersistentClassConstructor());
         var value = (object[])u.loads(data);
 
-		Assert.Equal(11, ((PersistentClass)value[0]).Key);
+        Assert.Equal(11, ((PersistentClass)value[0]).Key);
         Assert.Equal(22, ((PersistentClass)value[1]).Key);
     }
 
-	class PersistentClassConstructor : IObjectConstructor {
+    class PersistentClassConstructor : IObjectConstructor {
         public object construct(object[] args) {
-			return new PersistentClass() { Key = (int)args[0] };
+            return new PersistentClass() { Key = (int)args[0] };
         }
     }
     class PersistentClassDeconstructor : IObjectDeconstructor {
         public string get_module() {
-			return "UnitTests";
+            return "UnitTests";
         }
 
         public string get_name() {
-			return "PersistentClass";
+            return "PersistentClass";
         }
 
         public object[] deconstruct(object obj) {
-			return new object[] { ((PersistentClass)obj).Key };
+            return new object[] { ((PersistentClass)obj).Key };
         }
     }
 }
