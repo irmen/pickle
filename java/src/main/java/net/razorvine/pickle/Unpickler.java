@@ -786,7 +786,7 @@ public class Unpickler {
 
 	void load_binpersid() throws IOException {
 		// the persistent id is taken from the stack
-		String pid = stack.pop().toString();
+		Object pid = stack.pop();
 		stack.add(persistentLoad(pid));
 	}
 
@@ -817,7 +817,7 @@ public class Unpickler {
 	 * @return the actual object that belongs to that id. The default implementation throws a PickleException,
 	 *     telling you that you should implement this function yourself in a subclass of the Unpickler.
 	 */
-	protected Object persistentLoad(String pid)
+	protected Object persistentLoad(Object pid)
 	{
 		throw new PickleException("A load persistent id instruction was encountered, but no persistentLoad function was specified. (implement it in custom Unpickler subclass)");
 	}

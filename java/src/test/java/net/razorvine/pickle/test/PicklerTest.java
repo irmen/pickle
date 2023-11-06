@@ -11,6 +11,8 @@ import java.math.BigInteger;
 import java.net.URISyntaxException;
 import java.util.*;
 
+import net.razorvine.pickle.IObjectConstructor;
+import net.razorvine.pickle.IObjectDeconstructor;
 import net.razorvine.pickle.IObjectPickler;
 import net.razorvine.pickle.Opcodes;
 import net.razorvine.pickle.PickleException;
@@ -1033,6 +1035,119 @@ public class PicklerTest {
 		 *  pickle size: 76016
 		 *  pickling 1000 times took: 0.817
 		 */
+	}
+
+	@Test
+	public void testObjectPersistentId() throws PickleException, IOException
+	{
+		Object[] obj = new Object[] {
+			new PersistentClass(11),
+			new PersistentClass(22),
+		};
+        PersistentIDPickler p = new PersistentIDPickler(true);
+        byte[] data = p.dumps(obj);
+
+        PersistentIDUnpickler u = new PersistentIDUnpickler(true);
+        Object[] value = (Object[])u.loads(data);
+
+		assertEquals(11, ((PersistentClass)value[0]).Key);
+        assertEquals(22, ((PersistentClass)value[1]).Key);
+	}
+
+	@Test
+	public void testStringPersistentId() throws PickleException, IOException
+	{
+		Object[] obj = new Object[] {
+			new PersistentClass(11),
+			new PersistentClass(22),
+		};
+        PersistentIDPickler p = new PersistentIDPickler(false);
+        byte[] data = p.dumps(obj);
+
+        PersistentIDUnpickler u = new PersistentIDUnpickler(false);
+        Object[] value = (Object[])u.loads(data);
+
+		assertEquals(11, ((PersistentClass)value[0]).Key);
+        assertEquals(22, ((PersistentClass)value[1]).Key);
+	}
+
+	class PersistentClass {
+		public int Key;
+		public PersistentClass(int key) {
+			Key = key;
+		}
+	}
+	class PersistentIDPickler extends Pickler {
+		private boolean _idAsObject;
+		public PersistentIDPickler(boolean idAsObject) {
+			_idAsObject = idAsObject;
+		}
+
+		@Override
+		protected Object persistentId(Object obj) {
+			if (obj instanceof PersistentClass) {
+				int key = ((PersistentClass)obj).Key;
+				return _idAsObject ? (Object)key : (Object)String.valueOf(key);
+			}
+			return null;
+		}
+	}
+	class PersistentIDUnpickler extends Unpickler {
+		private boolean _idAsObject;
+		public PersistentIDUnpickler(boolean idAsObject) {
+			_idAsObject = idAsObject;
+		}
+
+		@Override
+		protected Object persistentLoad(Object obj) {
+			return new PersistentClass(_idAsObject ? (int)obj : Integer.parseInt((String)obj));
+		}
+	}
+
+	@Test
+	public void testCustomDeconstructedObject() throws PickleException, IOException
+	{
+		Object[] obj = new Object[] {
+			new PersistentClass(11),
+			new PersistentClass(22),
+		};
+        Pickler p = new Pickler();
+		Pickler.registerCustomDeconstructor(PersistentClass.class, new PersistentClassDeconstructor());
+        byte[] data = p.dumps(obj);
+
+        Unpickler u = new Unpickler();
+		Unpickler.registerConstructor("UnitTests", "PersistentClass", new PersistentClassConstructor());
+        Object[] value = (Object[])u.loads(data);
+
+		assertEquals(11, ((PersistentClass)value[0]).Key);
+        assertEquals(22, ((PersistentClass)value[1]).Key);
+	}
+	
+	class PersistentClassConstructor implements IObjectConstructor {
+
+		@Override
+		public Object construct(Object[] args) throws PickleException {
+			return new PersistentClass((int)args[0]);
+		}
+
+	}
+	class PersistentClassDeconstructor implements IObjectDeconstructor {
+
+		@Override
+		public String getModule() {
+			return "UnitTests";
+		}
+
+		@Override
+		public String getName() {
+			return "PersistentClass";
+		}
+
+		@Override
+		public Object[] deconstruct(Object obj) throws PickleException {
+			return new Object[] { ((PersistentClass)obj).Key };
+		}
+		
 	}
 
 	public static void main(String[] args) throws PickleException, IOException
