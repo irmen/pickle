@@ -13,14 +13,14 @@ namespace Razorvine.Pickle {
 		/// Get the module of the class being pickled
 		/// </summary>
 		string get_module();
-        /// <summary>
-        /// Get the name of the class being pickled
-        /// </summary>
-        string get_name();
-        /// <summary>
-        /// Get the deconstructed values, which will be used as arguments for reconstructing
-        /// </summary>
-        object[] deconstruct(object obj);
+		/// <summary>
+		/// Get the name of the class being pickled
+		/// </summary>
+		string get_name();
+		/// <summary>
+		/// Get the deconstructed values, which will be used as arguments for reconstructing
+		/// </summary>
+		object[] deconstruct(object obj);
 	}
 
 }
