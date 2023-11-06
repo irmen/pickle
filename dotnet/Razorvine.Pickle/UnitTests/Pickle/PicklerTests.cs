@@ -711,17 +711,32 @@ public class PicklerTests {
 		Assert.Equal(42, value["TakeThisIntToo"]);
 		Assert.Equal("banana", value["CustomMemberName"]);
 	}
+    [Fact]
+    public void TestStringPersistentID() {
+        var obj = new[] {
+			new PersistentClass() { Key = 11 },
+			new PersistentClass() { Key = 22 },
+		};
+        var p = new PersistentIDPickler(false);
+        byte[] data = p.dumps(obj);
 
-	[Fact]
-	public void TestPersistentID() {
+        var u = new PersistentIDUnpickler(false);
+        var value = (object[])u.loads(data);
+
+        Assert.Equal(11, ((PersistentClass)value[0]).Key);
+        Assert.Equal(22, ((PersistentClass)value[1]).Key);
+    }
+
+    [Fact]
+	public void TestObjectPersistentID() {
 		var obj = new[] {
 			new PersistentClass() { Key = 11 },
 			new PersistentClass() { Key = 22 },
 		};
-        var p = new PersistentIDPickler();
+        var p = new PersistentIDPickler(true);
         byte[] data = p.dumps(obj);
 
-        var u = new PersistentIDUnpickler();
+        var u = new PersistentIDUnpickler(true);
         var value = (object[])u.loads(data);
 
 		Assert.Equal(11, ((PersistentClass)value[0]).Key);
@@ -732,9 +747,13 @@ public class PicklerTests {
 		public int Key = 22;
 	}
 	class PersistentIDPickler : Pickler {
+		private bool _idAsObject;
+		public PersistentIDPickler(bool idAsObject) {
+			_idAsObject = idAsObject;
+		}
         protected override bool persistentId(object pid, out object newpid) {
             if (pid is PersistentClass opid) {
-				newpid = opid.Key;
+				newpid = _idAsObject ? opid.Key : (object)opid.Key.ToString();
 				return true;
 			}
 			newpid = null;
@@ -742,9 +761,13 @@ public class PicklerTests {
 		}
     }
 	class PersistentIDUnpickler : Unpickler {
+		private bool _idAsObject;
+		public PersistentIDUnpickler(bool idAsObject) {
+			_idAsObject = idAsObject;
+		}
 		protected override object persistentLoad(object pid) {
 			return new PersistentClass() {
-				Key = (int)pid
+				Key = _idAsObject ? (int)pid : int.Parse((string)pid)
 			};
         }
     }
