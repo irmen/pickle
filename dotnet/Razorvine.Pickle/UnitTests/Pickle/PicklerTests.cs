@@ -711,6 +711,87 @@ public class PicklerTests {
 		Assert.Equal(42, value["TakeThisIntToo"]);
 		Assert.Equal("banana", value["CustomMemberName"]);
 	}
+
+	[Fact]
+	public void TestPersistentID() {
+		var obj = new[] {
+			new PersistentClass() { Key = 11 },
+			new PersistentClass() { Key = 22 },
+		};
+        var p = new PersistentIDPickler();
+        byte[] data = p.dumps(obj);
+
+        var u = new PersistentIDUnpickler();
+        var value = (object[])u.loads(data);
+
+		Assert.Equal(11, ((PersistentClass)value[0]).Key);
+        Assert.Equal(22, ((PersistentClass)value[1]).Key);
+    }
+
+	class PersistentClass {
+		public int Key = 22;
+	}
+	class PersistentIDPickler : Pickler {
+        protected override bool persistentId(object pid, out object newpid) {
+            if (pid is PersistentClass opid) {
+				newpid = opid.Key;
+				return true;
+			}
+			newpid = null;
+			return false;
+		}
+    }
+	class PersistentIDUnpickler : Unpickler {
+		protected override object persistentLoad(object pid) {
+			return new PersistentClass() {
+				Key = (int)pid
+			};
+        }
+    }
+
+	[Fact]
+	public void TestCustomDeconstructedObject() {
+		var obj = new[] {
+			new DeconstructedPersistentClass(new PersistentClass() { Key = 11 }),
+			new DeconstructedPersistentClass(new PersistentClass() { Key = 22 }),
+		};
+        var p = new Pickler();
+        byte[] data = p.dumps(obj);
+
+        var u = new Unpickler();
+		Unpickler.registerConstructor("UnitTests", "PersistentClass", new PersistentClassConstructor());
+        var value = (object[])u.loads(data);
+
+		Assert.Equal(11, ((PersistentClass)value[0]).Key);
+        Assert.Equal(22, ((PersistentClass)value[1]).Key);
+    }
+
+	class PersistentClassConstructor : IObjectConstructor {
+        public object construct(object[] args) {
+			return new PersistentClass() { Key = (int)args[0] };
+        }
+    }
+    class DeconstructedPersistentClass : IDeconstructedObject {
+		public PersistentClass _obj;
+		public DeconstructedPersistentClass(PersistentClass obj) {
+			_obj = obj;
+		}
+        public string get_module() {
+			return "UnitTests";
+        }
+
+        public string get_name() {
+			return "PersistentClass";
+        }
+
+        public object[] get_values() {
+			return new object[] { _obj.Key };
+        }
+
+        public bool has_value() {
+				return _obj != null;
+        }
+    }
 }
 
 /// <summary>

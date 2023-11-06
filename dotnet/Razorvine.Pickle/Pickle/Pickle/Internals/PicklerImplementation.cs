@@ -245,7 +245,7 @@ namespace Razorvine.Pickle
                         else
                             put_enumerable(v);
                         return true;
-                    case IObjectDeconstructor v:
+                    case IDeconstructedObject v:
                         put_global(v);
                         return true;
                 }
@@ -301,13 +301,13 @@ namespace Razorvine.Pickle
 
         private static bool hasPublicProperties(Type t) => t.GetProperties().Length > 0;
 
-        private void put_global(IObjectDeconstructor global) {
+        private void put_global(IDeconstructedObject global) {
             output.WriteByte(Opcodes.GLOBAL);
             var nameBytes = Encoding.ASCII.GetBytes($"{global.get_module()}\n{global.get_name()}\n");
             output.Write(nameBytes, 0, nameBytes.Length);
 
             if (global.has_value()) {
-                save(global.get_value());
+                save(global.get_values());
                 output.WriteByte(Opcodes.REDUCE);
             }
 

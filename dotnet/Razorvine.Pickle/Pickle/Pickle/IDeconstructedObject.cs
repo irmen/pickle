@@ -6,12 +6,12 @@ using System.IO;
 namespace Razorvine.Pickle {
 
 	/// <summary>
-	/// Interface for object deconstructors used by the pickler, to pickle custom classes. 
+	/// Interface for deconstructed objects used by the pickler, to pickle custom classes. 
 	/// </summary>
-	public interface IObjectDeconstructor {
+	public interface IDeconstructedObject {
 		string get_module();
 		string get_name();
-		object get_value();
+		object[] get_values();
 		bool has_value();
 	}
 
