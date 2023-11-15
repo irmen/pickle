@@ -20,35 +20,35 @@ public class ArrayConstructorTest {
 		ArrayConstructor ac=new ArrayConstructor();
 		try {
 			ac.construct('b', -1, new byte[]{0});
-			Assert.True(false, "expected pickleexception");
+			Assert.Fail("expected pickleexception");
 		} catch (PickleException) {
 			//ok
 		}
 
 		try {
 			ac.construct('b', 0, new byte[]{0});
-			Assert.True(false, "expected pickleexception");
+			Assert.Fail("expected pickleexception");
 		} catch (PickleException) {
 			//ok
 		}
 
 		try {
 			ac.construct('?', 0, new byte[]{0});
-			Assert.True(false, "expected pickleexception");
+			Assert.Fail("expected pickleexception");
 		} catch (PickleException) {
 			//ok
 		}
 		
 		try {
 			ac.construct('b', 22, new byte[]{0});
-			Assert.True(false, "expected pickleexception");
+			Assert.Fail("expected pickleexception");
 		} catch (PickleException) {
 			//ok
 		}
 
 		try {
 			ac.construct('d', 16, new byte[]{0});
-			Assert.True(false, "expected pickleexception");
+			Assert.Fail("expected pickleexception");
 		} catch (PickleException) {
 			//ok
 		}
@@ -71,7 +71,7 @@ public class ArrayConstructorTest {
 		Assert.Equal(new []{'A',eurochar}, (char[])ac.construct('u', 21, new byte[]{0,0,0,65,0,0,0x20,0xac}));
 		try {
 		    ac.construct('u', 21, new byte[]{0,1,0,65}); // out of range codepoint
-		    Assert.True(false, "expected error");
+		    Assert.Fail("expected error");
 		} catch (PickleException) {
 		    // ok
 		}

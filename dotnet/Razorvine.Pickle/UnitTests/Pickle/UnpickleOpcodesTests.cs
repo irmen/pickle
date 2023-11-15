@@ -106,7 +106,7 @@ public class UnpickleOpcodesTests: IDisposable {
 		
 		try {
 			U("F1,2\n.");
-			Assert.True(false, "expected numberformat exception");
+			Assert.Fail("expected numberformat exception");
 		} catch (FormatException) {
 			// ok
 		}
@@ -124,13 +124,13 @@ public class UnpickleOpcodesTests: IDisposable {
 		Assert.Equal(1234567890123456L, U("I1234567890123456\n."));
 		try {
 			U("I123456789012345678901234567890\n.");
-			Assert.True(false, "expected overflow exception");
+			Assert.Fail("expected overflow exception");
 		} catch (OverflowException) {
 			// ok
 		}
 		try {
 			U("I123456789@012345678901234567890\n.");
-			Assert.True(false, "expected format exception");
+			Assert.Fail("expected format exception");
 		} catch (FormatException) {
 			// ok
 		}
@@ -167,7 +167,7 @@ public class UnpickleOpcodesTests: IDisposable {
 		Assert.Equal(BigInteger.Parse("1234567890123456789012345678901234567890"), U("L1234567890123456789012345678901234567890\n."));
 		try {
 			U("I1?0\n.");
-			Assert.True(false, "expected numberformat exception");
+			Assert.Fail("expected numberformat exception");
 		} catch (FormatException) {
 			// ok
 		}
@@ -265,7 +265,7 @@ public class UnpickleOpcodesTests: IDisposable {
 		
 		try {
 			U("S'bla\n."); // missing quote
-			Assert.True(false, "expected pickle exception");
+			Assert.Fail("expected pickle exception");
 		} catch (PickleException) {
 			//ok
 		}
@@ -325,7 +325,7 @@ public class UnpickleOpcodesTests: IDisposable {
 
 		try {
 			u.loads(new byte[]{Opcodes.SHORT_BINUNICODE, 0x00, 0x00, Opcodes.STOP});
-			Assert.True(false, "expected error");
+			Assert.Fail("expected error");
 		} catch (PickleException) {
 			// ok
 		}
@@ -407,7 +407,7 @@ public class UnpickleOpcodesTests: IDisposable {
 
 		try {
 			U("(lp0\nS'abc'\np1\nag2\nag2\na."); // invalid memo key
-			Assert.True(false, "expected pickle exception");
+			Assert.Fail("expected pickle exception");
 		} catch (PickleException) {
 			// ok
 		}
@@ -428,7 +428,7 @@ public class UnpickleOpcodesTests: IDisposable {
 
 		try {
 			U("]q\u0000(U\u0003abcq\u0001h\u0002h\u0002e."); // invalid memo key
-			Assert.True(false, "expected pickle exception");
+			Assert.Fail("expected pickle exception");
 		} catch (PickleException) {
 			// ok
 		}
@@ -458,7 +458,7 @@ public class UnpickleOpcodesTests: IDisposable {
 		try {
 			// invalid memo key
 			U("]r\u0000\u0000\u0000\u0000(U\u0003abcr\u0001\u0002\u0003\u0004j\u0001\u0005\u0005\u0005j\u0001\u0005\u0005\u0005e.");
-			Assert.True(false, "expected pickle exception");
+			Assert.Fail("expected pickle exception");
 		} catch (PickleException) {
 			// ok
 		}
@@ -586,7 +586,7 @@ public class UnpickleOpcodesTests: IDisposable {
 		U("\u0080\u0004N.");
 		try {
 			U("\u0080\u0009N."); // unsupported protocol 9.
-			Assert.True(false, "expected pickle exception");
+			Assert.Fail("expected pickle exception");
 		} catch (PickleException) {
 			// ok
 		}
@@ -610,7 +610,7 @@ public class UnpickleOpcodesTests: IDisposable {
 		
 		try {
 			Assert.Equal(dec, (decimal)U("cdecimal\nDecimal\n(V123.456\nt}\u008c\u0004testK1s\u0092."));
-			Assert.True(false, "expected exception");
+			Assert.Fail("expected exception");
 		} catch (PickleException x) {
 			Assert.Equal("newobj_ex with keyword arguments not supported", x.Message);
 		}

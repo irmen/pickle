@@ -31,7 +31,7 @@ public class PickleUtilsTest {
 		try
 		{
 			PickleUtils.readline(bis);
-			Assert.True(false, "expected IOException");
+			Assert.Fail("expected IOException");
 		}
 		catch(IOException) {}
 	}
@@ -46,7 +46,7 @@ public class PickleUtilsTest {
 		try
 		{
 			PickleUtils.readline(bis, true);
-			Assert.True(false, "expected IOException");
+			Assert.Fail("expected IOException");
 		}
 		catch(IOException) {}
 	}
@@ -62,7 +62,7 @@ public class PickleUtilsTest {
 		try
 		{
 			PickleUtils.readbytes(bis, 999);
-			Assert.True(false, "expected IOException");
+			Assert.Fail("expected IOException");
 		}
 		catch(IOException) {}
 	}
@@ -81,11 +81,11 @@ public class PickleUtilsTest {
 	public void TestBytes_to_integer() {
 		try {
 			PickleUtils.bytes_to_integer(new byte[] {});
-			Assert.True(false, "expected PickleException");
+			Assert.Fail("expected PickleException");
 		} catch (PickleException) {}
 		try {
 			PickleUtils.bytes_to_integer(new byte[] {0});
-			Assert.True(false, "expected PickleException");
+			Assert.Fail("expected PickleException");
 		} catch (PickleException) {}
 		Assert.Equal(0x00000000, PickleUtils.bytes_to_integer(new byte[] {0x00, 0x00}));
 		Assert.Equal(0x00003412, PickleUtils.bytes_to_integer(new byte[] {0x12, 0x34}));
@@ -99,7 +99,7 @@ public class PickleUtilsTest {
 		try
 		{
 			PickleUtils.bytes_to_integer(new byte[] { 200,50,25,100,1,2,3,4});
-			Assert.True(false, "expected PickleException");
+			Assert.Fail("expected PickleException");
 		} catch (PickleException) {}
 	}
 
@@ -107,11 +107,11 @@ public class PickleUtilsTest {
 	public void TestBytes_to_uint() {
 		try {
 			PickleUtils.bytes_to_uint(new byte[] {},0);
-			Assert.True(false, "expected PickleException");
+			Assert.Fail("expected PickleException");
 		} catch (PickleException) {}
 		try {
 			PickleUtils.bytes_to_uint(new byte[] {0},0);
-			Assert.True(false, "expected PickleException");
+			Assert.Fail("expected PickleException");
 		} catch (PickleException) {}
 		Assert.Equal(0x000000000L, PickleUtils.bytes_to_uint(new byte[] {0,0,0,0} ,0));
 		Assert.Equal(0x012345678L, PickleUtils.bytes_to_uint(new byte[] {0x78, 0x56, 0x34, 0x12} ,0));
@@ -123,11 +123,11 @@ public class PickleUtilsTest {
 	public void TestBytes_to_long() {
 		try {
 			PickleUtils.bytes_to_long(new byte[] {}, 0);
-			Assert.True(false, "expected PickleException");
+			Assert.Fail("expected PickleException");
 		} catch (PickleException) {}
 		try {
 			PickleUtils.bytes_to_long(new byte[] {0}, 0);
-			Assert.True(false, "expected PickleException");
+			Assert.Fail("expected PickleException");
 		} catch (PickleException) {}
 	    
 		Assert.Equal(0x00000000L, PickleUtils.bytes_to_long(new byte[] {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00} ,0));
@@ -156,11 +156,11 @@ public class PickleUtilsTest {
 	public void TestBytes_to_double() {
 		try {
 			PickleUtils.bytes_bigendian_to_double(new byte[] {} ,0);
-			Assert.True(false, "expected PickleException");
+			Assert.Fail("expected PickleException");
 		} catch (PickleException) {}
 		try {
 			PickleUtils.bytes_bigendian_to_double(new byte[] {0} ,0);
-			Assert.True(false, "expected PickleException");
+			Assert.Fail("expected PickleException");
 		} catch (PickleException) {}
 		Assert.Equal(0.0d, PickleUtils.bytes_bigendian_to_double(new byte[] {0,0,0,0,0,0,0,0} ,0));
 		Assert.Equal(1.0d, PickleUtils.bytes_bigendian_to_double(new byte[] {0x3f,0xf0,0,0,0,0,0,0} ,0));
@@ -173,7 +173,7 @@ public class PickleUtilsTest {
 		try
 		{
 			PickleUtils.bytes_bigendian_to_double(new byte[] { 200,50,25,100} ,0);
-			Assert.True(false, "expected PickleException");
+			Assert.Fail("expected PickleException");
 		} catch (PickleException) {}
 
 		// test offset
@@ -185,11 +185,11 @@ public class PickleUtilsTest {
 	public void TestBytes_to_float() {
 		try {
 			PickleUtils.bytes_bigendian_to_float(new byte[] {}, 0);
-			Assert.True(false, "expected PickleException");
+			Assert.Fail("expected PickleException");
 		} catch (PickleException) {}
 		try {
 			PickleUtils.bytes_bigendian_to_float(new byte[] {0}, 0);
-			Assert.True(false, "expected PickleException");
+			Assert.Fail("expected PickleException");
 		} catch (PickleException) {}
 		Assert.True(0.0f == PickleUtils.bytes_bigendian_to_float(new byte[] {0,0,0,0}, 0));
 		Assert.True(1.0f == PickleUtils.bytes_bigendian_to_float(new byte[] {0x3f,0x80,0,0} ,0));

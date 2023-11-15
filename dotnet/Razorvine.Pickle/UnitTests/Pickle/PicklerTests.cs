@@ -617,7 +617,7 @@ public class PicklerTests {
 		Pickler p = new Pickler(false);
 		try {
 			p.dumps(c);
-			Assert.True(false, "should crash");
+			Assert.Fail("should crash");
 		} catch (PickleException x)
 		{
 			Assert.Contains("couldn't pickle object of type", x.Message);
@@ -636,14 +636,14 @@ public class PicklerTests {
 		Pickler p = new Pickler(false);
 		try {
 			p.dumps(b);
-			Assert.True(false, "should crash");
+			Assert.Fail("should crash");
 		} catch (PickleException x)
 		{
 			Assert.Contains("couldn't pickle object of type", x.Message);
 		}
 		try {
 			p.dumps(sub);
-			Assert.True(false, "should crash");
+			Assert.Fail("should crash");
 		} catch (PickleException x) {
 			Assert.Contains("couldn't pickle object of type", x.Message);
 		}

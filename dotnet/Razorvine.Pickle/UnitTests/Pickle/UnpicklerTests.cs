@@ -648,7 +648,7 @@ public class UnpicklerTests {
 	    try {
 		    Unpickler fu = new Unpickler();
 		    fu.loads(data);
-		    Assert.True(false, "should give error");
+		    Assert.Fail("should give error");
 	    } catch(PickleException x) {
 		    Assert.Contains("out-of-band", x.Message);
 	    }
