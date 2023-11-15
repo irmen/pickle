@@ -213,9 +213,9 @@ public class UnpickleOpcodesTest {
 	class PersistentIdUnpickler extends Unpickler
 	{
 		@Override
-		protected Object persistentLoad(String pid)
+		protected Object persistentLoad(Object pid)
 		{
-			if("9999".equals(pid))
+			if("9999".equals(pid.toString()))
 				return "PersistentObject";
 			else
 				throw new IllegalArgumentException("unknown persistent_id "+pid);

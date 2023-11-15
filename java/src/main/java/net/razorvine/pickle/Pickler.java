@@ -70,6 +70,12 @@ public class Pickler {
 	protected static Map<Class<?>, IObjectPickler> customPicklers=new HashMap<Class<?>, IObjectPickler>();
 
 	/**
+	 * Registry of deconstructors for custom classes, to be able to pickle custom classes and also reconstruct.
+	 * them using {@link Unpickler#registerConstructor}. can add to this via {@link Pickler#registerCustomDeconstructor}
+	 */
+	protected static Map<Class<?>, IObjectDeconstructor> customDeconstructors =new HashMap<Class<?>, IObjectDeconstructor>();
+
+	/**
 	 * Use memoization or not. This saves pickle size, but can only create pickles of objects that are hashable.
 	 */
 	protected boolean useMemo=true;
@@ -130,6 +136,16 @@ public class Pickler {
 	 */
 	public static void registerCustomPickler(Class<?> clazz, IObjectPickler pickler) {
 		customPicklers.put(clazz, pickler);
+	}
+
+	/**
+	 * Register custom object deconstructor for custom classes.
+	 * An alternative for writing your own pickler, you can create a deconstructor which will have a 
+	 * name & module, and the deconstructor will convert an object to a list of objects which will then
+	 * be used as the arguments for reconstructing when unpickling.
+	 */
+	public static void registerCustomDeconstructor(Class<?> clazz, IObjectDeconstructor deconstructor) {
+		customDeconstructors.put(clazz, deconstructor);
 	}
 
 	/**
@@ -298,6 +314,26 @@ public class Pickler {
 			writeMemo(o);
 			return true;
 		}
+		IObjectDeconstructor customDeconstructor = getCustomDeconstructor(t);
+		if (customDeconstructor!=null) {
+			put_global(customDeconstructor, o);
+			return true;
+		}
+
+		// Check for persistentId
+		Object persistentId = persistentId(o);
+		if (persistentId!=null) {
+			if (persistentId instanceof String && !((String)persistentId).contains("\n")) {
+				out.write(Opcodes.PERSID);
+				out.write(((String)persistentId).getBytes());
+				out.write("\n".getBytes());
+			}
+			else {
+				save(persistentId);
+				out.write(Opcodes.BINPERSID);
+			}
+			return true;
+		}
 
 		// more complex types
 		if(o instanceof String) {
@@ -397,6 +433,16 @@ public class Pickler {
 		}
 
 		return null;
+	}
+
+	/**
+	 * Get the custom deconstructor fot the given class, to be able to pickle and unpickle custom classes
+	 * A custom deconstructor is matched on the interface or abstract base class that the object implements or inherits from.
+	 * @param t the class of the object to be pickled
+	 * @return null (if no custom deconstructor found) or a deconstructor registered for this class (via {@link Pickler#registerCustomDeconstructor})
+	 */
+	protected IObjectDeconstructor getCustomDeconstructor(Class<?> t) {
+		return customDeconstructors.get(t);
 	}
 
 	void put_collection(Collection<?> list) throws IOException {
@@ -669,6 +715,17 @@ public class Pickler {
 		writeMemo(array);		// array of primitives can by definition never be recursive, so okay to put this at the end
 	}
 
+	void put_global(IObjectDeconstructor deconstructor, Object obj) throws IOException {
+		out.write(Opcodes.GLOBAL);
+		out.write((deconstructor.getModule() + "\n" + deconstructor.getName() + "\n").getBytes());
+		Object[] values = deconstructor.deconstruct(obj);
+		if (values.length > 0) {
+			save(values);
+			out.write(Opcodes.REDUCE);
+		}
+		writeMemo(obj);
+	}
+
 	void put_decimal(BigDecimal d) throws IOException {
 		//"cdecimal\nDecimal\nU\n12345.6789\u0085R."
 		out.write(Opcodes.GLOBAL);
@@ -778,5 +835,15 @@ public class Pickler {
 		} catch (InvocationTargetException e) {
 			throw new PickleException("couldn't introspect javabean: "+e);
 		}
+	}
+
+	/**
+	 * Hook for the persistent id feature where an object is replaced externally by an id
+	 * @param obj the object to replace with an id
+	 * @return the id object that belongs to this object, or null if this object isn't replaced by an id.
+	 */
+	protected Object persistentId(Object obj)
+	{
+		return null;
 	}
 }

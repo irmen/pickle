@@ -791,7 +791,7 @@ namespace Razorvine.Pickle
         private void load_binpersid()
         {
             // the persistent id is taken from the stack
-            string pid = stack.pop().ToString();
+            var pid = stack.pop();
             stack.add(unpickler.persistentLoad(pid));
         }
 

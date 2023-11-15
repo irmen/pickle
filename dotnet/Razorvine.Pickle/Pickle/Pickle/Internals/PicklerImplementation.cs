@@ -258,6 +258,27 @@ namespace Razorvine.Pickle
                 return true;
             }
 
+            IObjectDeconstructor customDeconstructor = pickler.getCustomDeconstructor(t);
+            if (customDeconstructor != null) 
+            {
+                put_global(customDeconstructor, o);
+                return true;
+            }
+
+            if (pickler.persistentId(o, out var newpid)) {
+                if (newpid is string s && !s.Contains("\n")) {
+                    output.WriteByte(Opcodes.PERSID);
+                    byte[] bytes = Encoding.ASCII.GetBytes(s);
+                    output.Write(bytes, 0, bytes.Length);
+                    output.WriteByte((byte)'\n');
+                }
+                else {
+                    save(newpid);
+                    output.WriteByte(Opcodes.BINPERSID);
+                }
+                return true;
+            }
+
             // more complex types
             DataContractAttribute dca = (DataContractAttribute)Attribute.GetCustomAttribute(t, typeof(DataContractAttribute));
             if (dca != null)
@@ -283,6 +304,20 @@ namespace Razorvine.Pickle
         }
 
         private static bool hasPublicProperties(Type t) => t.GetProperties().Length > 0;
+
+        private void put_global(IObjectDeconstructor deconstructor, object obj) {
+            output.WriteByte(Opcodes.GLOBAL);
+            var nameBytes = Encoding.ASCII.GetBytes($"{deconstructor.get_module()}\n{deconstructor.get_name()}\n");
+            output.Write(nameBytes, 0, nameBytes.Length);
+
+            var values = deconstructor.deconstruct(obj);
+            if (values.Length > 0) {
+                save(values);
+                output.WriteByte(Opcodes.REDUCE);
+            }
+
+            WriteMemo(obj);
+        }
 
         private void put_datetime(DateTime dt)
         {
