@@ -13,12 +13,12 @@ import java.util.TimeZone;
  * @author Irmen de Jong (irmen@razorvine.net)
  */
 public class DateTimeConstructor implements IObjectConstructor {
-	public static int DATETIME = 1;
-	public static int DATE = 2;
-	public static int TIME = 3;
-	public static int TIMEDELTA = 4;
+	public static final int DATETIME = 1;
+	public static final int DATE = 2;
+	public static final int TIME = 3;
+	public static final int TIMEDELTA = 4;
 
-	private int pythontype;
+	private final int pythontype;
 
 	public DateTimeConstructor(int pythontype) {
 		this.pythontype = pythontype;

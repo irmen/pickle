@@ -11,7 +11,7 @@ import java.util.TimeZone;
  */
 public class Tzinfo {
 
-    private boolean forceTimeZone;
+    private final boolean forceTimeZone;
     private TimeZone timeZone;
 
     public Tzinfo(TimeZone timeZone) {

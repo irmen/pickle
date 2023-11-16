@@ -9,8 +9,8 @@ import java.io.Serializable;
  */
 public class ComplexNumber implements Serializable {
 	private static final long serialVersionUID = 4668080260997226513L;
-	private double r;	// real
-	private double i;	// imaginary
+	private final double r;	// real
+	private final double i;	// imaginary
 
 	public ComplexNumber(double rr, double ii) {
 		r = rr;
@@ -23,7 +23,7 @@ public class ComplexNumber implements Serializable {
 	}
 
 	public String toString() {
-		StringBuffer sb = new StringBuffer().append(r);
+		StringBuilder sb = new StringBuilder().append(r);
 		if (i >= 0)
 			sb.append('+');
 		return sb.append(i).append('i').toString();

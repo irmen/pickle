@@ -346,7 +346,7 @@ public abstract class PickleUtils {
 					default:
 						if(str.length()>80)
 							str=str.substring(0, 80);
-						throw new PickleException("invalid escape sequence char \'"+ (c2) + "\' in string \"" + str + " [...]\" (possibly truncated)");
+						throw new PickleException("invalid escape sequence char '" + (c2) + "' in string \"" + str + " [...]\" (possibly truncated)");
 				}
 			} else {
 				sb.append(str.charAt(i));
@@ -356,7 +356,7 @@ public abstract class PickleUtils {
 	}
 
 	/**
-	 * Decode a string with possible escaped unicode in it (\u20ac)
+	 * Decode a string with possible escaped unicode in it (code point 20ac)
 	 */
 	public static String decode_unicode_escaped(String str) {
 		if(str.indexOf('\\')==-1)
@@ -409,7 +409,7 @@ public abstract class PickleUtils {
 					default:
 						if(str.length()>80)
 							str=str.substring(0, 80);
-						throw new PickleException("invalid escape sequence char \'"+ (c2) + "\' in string \"" + str + " [...]\" (possibly truncated)");
+						throw new PickleException("invalid escape sequence char '" + (c2) + "' in string \"" + str + " [...]\" (possibly truncated)");
 				}
 			} else {
 				sb.append(str.charAt(i));

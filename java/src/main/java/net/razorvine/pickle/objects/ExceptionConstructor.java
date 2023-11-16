@@ -14,8 +14,8 @@ import java.lang.reflect.Field;
  */
 public class ExceptionConstructor implements IObjectConstructor {
 
-	private Class<?> type;
-	private String pythonExceptionType;
+	private final Class<?> type;
+	private final String pythonExceptionType;
 
 	public ExceptionConstructor(Class<?> type, String module, String name) {
 		if(module!=null)
@@ -32,7 +32,7 @@ public class ExceptionConstructor implements IObjectConstructor {
 				if(args==null || args.length==0) {
 					args = new String[] { "["+pythonExceptionType+"]" };
 				} else {
-					String msg = "["+pythonExceptionType+"] "+(String)args[0];
+					String msg = "["+pythonExceptionType+"] "+ args[0];
 					args = new String[] {msg};
 				}
 			}

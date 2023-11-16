@@ -9,7 +9,7 @@ import java.util.Map;
 public class ClassDict extends HashMap<String, Object>
 {
 	private static final long serialVersionUID = 6157715596627049511L;
-	private String classname;
+	private final String classname;
 
 	public ClassDict(String modulename, String classname)
 	{
@@ -27,10 +27,7 @@ public class ClassDict extends HashMap<String, Object>
 	public void __setstate__(HashMap<String, Object> values) {
 		this.clear();
 		this.put("__class__", this.classname);
-		for(Map.Entry<String, Object> e: values.entrySet())
-		{
-			this.put(e.getKey(), e.getValue());
-		}
+        this.putAll(values);
 	}
 
 

@@ -11,6 +11,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.Map.Entry;
 
@@ -34,8 +35,8 @@ public class Pickler {
 	 * A memoized object.
 	 */
 	protected static class Memo {
-		public Object obj;
-		public int index;
+		public final Object obj;
+		public final int index;
 
 		public Memo(Object obj, int index) {
 			this.obj = obj;
@@ -46,7 +47,7 @@ public class Pickler {
 	/**
 	 * Limit on the recursion depth to avoid stack overflows.
 	 */
-	protected static int MAX_RECURSE_DEPTH = 1000;
+	protected static final int MAX_RECURSE_DEPTH = 1000;
 
 	/**
 	 * Current recursion level.
@@ -61,13 +62,13 @@ public class Pickler {
 	/**
 	 * The Python pickle protocol version of the pickles created by this library.
 	 */
-	protected int PROTOCOL = 2;
+	protected final int PROTOCOL = 2;
 
 	/**
 	 * Registry of picklers for custom classes, to be able to not just pickle simple built in datatypes.
 	 * You can add to this via {@link Pickler#registerCustomPickler}
 	 */
-	protected static Map<Class<?>, IObjectPickler> customPicklers=new HashMap<Class<?>, IObjectPickler>();
+	protected static final Map<Class<?>, IObjectPickler> customPicklers= new HashMap<>();
 
 	/**
 	 * Registry of deconstructors for custom classes, to be able to pickle custom classes and also reconstruct.
@@ -165,7 +166,7 @@ public class Pickler {
 		out = stream;
 		recurse = 0;
 		if(useMemo)
-			memo = new HashMap<Integer, Memo>();
+			memo = new HashMap<>();
 		out.write(Opcodes.PROTO);
 		out.write(PROTOCOL);
 		save(o);
@@ -291,7 +292,7 @@ public class Pickler {
 			return true;
 		}
 		if(o instanceof Long || t.equals(Long.TYPE)) {
-			put_long(((Long)o).longValue());
+			put_long((Long) o);
 			return true;
 		}
 		if(o instanceof Float || t.equals(Float.TYPE)) {
@@ -299,7 +300,7 @@ public class Pickler {
 			return true;
 		}
 		if(o instanceof Double || t.equals(Double.TYPE)) {
-			put_float(((Double)o).doubleValue());
+			put_float((Double) o);
 			return true;
 		}
 		if(o instanceof Character || t.equals(Character.TYPE)) {
@@ -752,7 +753,7 @@ public class Pickler {
 	}
 
 	void put_string(String string) throws IOException {
-		byte[] encoded=string.getBytes("UTF-8");
+		byte[] encoded=string.getBytes(StandardCharsets.UTF_8);
 		out.write(Opcodes.BINUNICODE);
 		out.write(PickleUtils.integer_to_bytes(encoded.length));
 		out.write(encoded);
@@ -802,7 +803,7 @@ public class Pickler {
 	}
 
 	void put_javabean(Object o) throws PickleException, IOException {
-		Map<String,Object> map=new HashMap<String,Object>();
+		Map<String,Object> map= new HashMap<>();
 		try {
 			// note: don't use the java.bean api, because that is not available on Android.
 			for(Method m: o.getClass().getMethods()) {

@@ -10,8 +10,8 @@ import net.razorvine.pickle.PickleException;
  */
 public class ClassDictConstructor implements IObjectConstructor {
 
-	String module;
-	String name;
+	final String module;
+	final String name;
 
 	public ClassDictConstructor(String module, String name) {
 		this.module = module;

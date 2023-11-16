@@ -6,14 +6,14 @@ import net.razorvine.pickle.PickleException;
 import java.util.TimeZone;
 
 public class TimeZoneConstructor implements IObjectConstructor {
-	public static int UTC = 1;
-	public static int PYTZ = 2;
-	public static int DATEUTIL_TZUTC = 3;
-	public static int DATEUTIL_TZFILE = 4;
-	public static int DATEUTIL_GETTZ = 5;
-	public static int TZINFO = 6;
+	public static final int UTC = 1;
+	public static final int PYTZ = 2;
+	public static final int DATEUTIL_TZUTC = 3;
+	public static final int DATEUTIL_TZFILE = 4;
+	public static final int DATEUTIL_GETTZ = 5;
+	public static final int TZINFO = 6;
 
-	private int pythontype;
+	private final int pythontype;
 
 	public TimeZoneConstructor(int pythontype) {
 		this.pythontype = pythontype;

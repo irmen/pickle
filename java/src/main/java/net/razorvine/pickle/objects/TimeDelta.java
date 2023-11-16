@@ -11,10 +11,10 @@ import java.util.Locale;
  */
 public class TimeDelta implements Serializable {
 	private static final long serialVersionUID = 7655189815303876847L;
-	public int days;
-	public int seconds;
-	public int microseconds;
-	public double total_seconds;
+	public final int days;
+	public final int seconds;
+	public final int microseconds;
+	public final double total_seconds;
 
 	public TimeDelta(int days, int seconds, int microseconds) {
 		this.days = days;

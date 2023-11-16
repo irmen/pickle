@@ -10,10 +10,10 @@ import java.util.Calendar;
  */
 public class Time implements Serializable {
 	private static final long serialVersionUID = 2325820650757621315L;
-	public int hours;
-	public int minutes;
-	public int seconds;
-	public int microseconds;
+	public final int hours;
+	public final int minutes;
+	public final int seconds;
+	public final int microseconds;
 
 	public Time(int h, int m, int s, int microsecs) {
 		hours = h;

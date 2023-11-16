@@ -12,5 +12,5 @@ public interface IObjectPickler {
 	/**
 	 * Pickle an object.
 	 */
-	public void pickle(Object o, OutputStream out, Pickler currentPickler) throws PickleException, IOException;
+    void pickle(Object o, OutputStream out, Pickler currentPickler) throws PickleException, IOException;
 }

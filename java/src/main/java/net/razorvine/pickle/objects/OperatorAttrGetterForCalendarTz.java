@@ -27,7 +27,7 @@ public class OperatorAttrGetterForCalendarTz implements IObjectConstructor {
 			throw new PickleException("expected 'localize' string argument for construction of AttrGetter");
 	}
 
-	class AttrGetterForTz implements IObjectConstructor
+	static class AttrGetterForTz implements IObjectConstructor
 	{
 		public AttrGetterForTz() {
 		}
@@ -41,9 +41,9 @@ public class OperatorAttrGetterForCalendarTz implements IObjectConstructor {
 		}
 	}
 
-	class CalendarLocalizer implements IObjectConstructor
+	static class CalendarLocalizer implements IObjectConstructor
 	{
-		TimeZone tz;
+		final TimeZone tz;
 
 		public CalendarLocalizer(TimeZone tz) {
 			this.tz=tz;

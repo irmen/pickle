@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 
@@ -50,10 +51,10 @@ public class Unpickler {
 	/**
 	 * Registry of object constructors that are used to create the appropriate Java objects for the given Python module.typename references.
 	 */
-	protected static Map<String, IObjectConstructor> objectConstructors;
+	protected static final Map<String, IObjectConstructor> objectConstructors;
 
 	static {
-		objectConstructors = new HashMap<String, IObjectConstructor>();
+		objectConstructors = new HashMap<>();
 		objectConstructors.put("__builtin__.complex", new AnyClassConstructor(ComplexNumber.class));
 		objectConstructors.put("builtins.complex", new AnyClassConstructor(ComplexNumber.class));
 		objectConstructors.put("array.array", new ArrayConstructor());
@@ -84,7 +85,7 @@ public class Unpickler {
 	 * Create an unpickler.
 	 */
 	public Unpickler() {
-		memo = new HashMap<Integer, Object>();
+		memo = new HashMap<>();
 	}
 
 	/**
@@ -131,7 +132,7 @@ public class Unpickler {
 		if(input!=null)
 			try {
 				input.close();
-			} catch (IOException e) {
+			} catch (IOException ignored) {
 			}
 	}
 
@@ -523,19 +524,19 @@ public class Unpickler {
 	void load_binunicode() throws IOException {
 		int len = PickleUtils.bytes_to_integer(PickleUtils.readbytes(input, 4));
 		byte[] data = PickleUtils.readbytes(input, len);
-		stack.add(new String(data,"UTF-8"));
+		stack.add(new String(data, StandardCharsets.UTF_8));
 	}
 
 	void load_binunicode8() throws IOException {
 		long len = PickleUtils.bytes_to_long(PickleUtils.readbytes(input, 8),0);
 		byte[] data = PickleUtils.readbytes(input, len);
-		stack.add(new String(data,"UTF-8"));
+		stack.add(new String(data, StandardCharsets.UTF_8));
 	}
 
 	void load_short_binunicode() throws IOException {
 		int len = PickleUtils.readbyte(input);
 		byte[] data = PickleUtils.readbytes(input, len);
-		stack.add(new String(data,"UTF-8"));
+		stack.add(new String(data, StandardCharsets.UTF_8));
 	}
 
 	void load_short_binstring() throws IOException {
@@ -576,15 +577,15 @@ public class Unpickler {
 	}
 
 	void load_empty_list() {
-		stack.add(new ArrayList<Object>(0));
+		stack.add(new ArrayList<>(0));
 	}
 
 	void load_empty_dictionary() {
-		stack.add(new HashMap<Object, Object>(0));
+		stack.add(new HashMap<>(0));
 	}
 
 	void load_empty_set() {
-		stack.add(new HashSet<Object>());
+		stack.add(new HashSet<>());
 	}
 
 	void load_list() {
@@ -594,7 +595,7 @@ public class Unpickler {
 
 	void load_dict() {
 		List<Object> top = stack.pop_all_since_marker();
-		HashMap<Object, Object> map = new HashMap<Object, Object>(top.size());
+		HashMap<Object, Object> map = new HashMap<>(top.size());
 		for (int i = 0; i < top.size(); i += 2) {
 			Object key = top.get(i);
 			Object value = top.get(i + 1);
@@ -605,8 +606,7 @@ public class Unpickler {
 
 	void load_frozenset() {
 		List<Object> top = stack.pop_all_since_marker();
-		HashSet<Object> set = new HashSet<Object>();
-		set.addAll(top);
+        HashSet<Object> set = new HashSet<>(top);
 		stack.add(set);
 	}
 
@@ -736,7 +736,7 @@ public class Unpickler {
 	}
 
 	void load_setitems() {
-		HashMap<Object, Object> newitems = new HashMap<Object, Object>();
+		HashMap<Object, Object> newitems = new HashMap<>();
 		Object value = stack.pop();
 		while (value != stack.MARKER) {
 			Object key = stack.pop();
@@ -767,7 +767,7 @@ public class Unpickler {
 		HashMap<?, ?> kwargs = (HashMap<?, ?>) stack.pop();
 		Object[] args = (Object[]) stack.pop();
 		IObjectConstructor constructor = (IObjectConstructor) stack.pop();
-		if(kwargs.size()==0)
+		if(kwargs.isEmpty())
 			stack.add(constructor.construct(args));
 		else
 			throw new PickleException("newobj_ex with keyword arguments not supported");

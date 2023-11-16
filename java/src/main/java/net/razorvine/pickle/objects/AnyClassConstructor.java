@@ -13,7 +13,7 @@ import java.math.BigDecimal;
  */
 public class AnyClassConstructor implements IObjectConstructor {
 
-	private Class<?> type;
+	private final Class<?> type;
 
 	public AnyClassConstructor(Class<?> type) {
 		this.type = type;

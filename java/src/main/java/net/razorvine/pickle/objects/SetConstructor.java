@@ -19,6 +19,6 @@ public class SetConstructor implements IObjectConstructor {
 		// create a HashSet, args=arraylist of stuff to put in it
 		@SuppressWarnings("unchecked")
 		ArrayList<Object> data = (ArrayList<Object>) args[0];
-		return new HashSet<Object>(data);
+		return new HashSet<>(data);
 	}
 }

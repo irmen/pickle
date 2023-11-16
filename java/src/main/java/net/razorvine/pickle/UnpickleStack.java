@@ -12,11 +12,11 @@ import java.util.List;
  */
 public class UnpickleStack implements Serializable {
 	private static final long serialVersionUID = 5032718425413805422L;
-	private ArrayList<Object> stack;
-	protected Object MARKER;
+	private final ArrayList<Object> stack;
+	protected final Object MARKER;
 
 	public UnpickleStack() {
-		stack = new ArrayList<Object>();
+		stack = new ArrayList<>();
 		MARKER = new Object(); // any new unique object
 	}
 
@@ -36,7 +36,7 @@ public class UnpickleStack implements Serializable {
 	}
 
 	public List<Object> pop_all_since_marker() {
-		ArrayList<Object> result = new ArrayList<Object>();
+		ArrayList<Object> result = new ArrayList<>();
 		Object o = pop();
 		while (o != this.MARKER) {
 			result.add(o);
