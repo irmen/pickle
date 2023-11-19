@@ -1,6 +1,5 @@
 # Pickle - Java and .NET library for Python's pickle serialization protocol
 
-[![Build Status](https://travis-ci.org/irmen/pickle.svg?branch=master)](https://travis-ci.org/irmen/pickle)
 [![Maven Central](https://img.shields.io/maven-central/v/net.razorvine/pickle.svg)](http://search.maven.org/#search|ga|1|g%3A%22net.razorvine%22%20AND%20a%3A%22pickle%22)
 [![NuGet](https://img.shields.io/nuget/v/Razorvine.Pickle.svg)](https://www.nuget.org/packages/Razorvine.Pickle/)
 
