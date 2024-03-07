@@ -38,7 +38,7 @@ namespace Razorvine.Pickle
 
         public object Load()
         {
-            byte key = 0;
+            byte key;
             while ((key = input.ReadByte()) != Opcodes.STOP)
             {
                 Dispatch(key);
@@ -334,15 +334,14 @@ namespace Razorvine.Pickle
             ReadOnlySpan<byte> bytes = input.ReadLineBytes(includeLF: true);
             if (bytes.Length == 3 && bytes[2] == (byte)'\n' && bytes[0] == (byte)'0')
             {
-                if (bytes[1] == (byte)'0')
+                switch (bytes[1])
                 {
-                    load_false();
-                    return;
-                }
-                else if (bytes[1] == (byte)'1')
-                {
-                    load_true();
-                    return;
+                    case (byte)'0':
+                        load_false();
+                        return;
+                    case (byte)'1':
+                        load_true();
+                        return;
                 }
             }
 
@@ -715,9 +714,9 @@ namespace Razorvine.Pickle
         {
             object[] top = stack.pop_all_since_marker_as_array();
             ArrayList list = (ArrayList)stack.peek();
-            for (int i = 0; i < top.Length; i++)
+            foreach (object t in top)
             {
-                list.Add(top[i]);
+                list.Add(t);
             }
         }
 

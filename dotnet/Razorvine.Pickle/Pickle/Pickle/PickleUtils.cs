@@ -67,12 +67,13 @@ public static class PickleUtils {
 
     internal static bool IsWhitespace(ReadOnlySpan<byte> bytes)
     {
-        for (int i = 0; i < bytes.Length; i++)
-        {
-            if (!char.IsWhiteSpace((char)bytes[i]))
-                return false;
-        }
-        return true;
+	    foreach (byte t in bytes)
+	    {
+		    if (!char.IsWhiteSpace((char)t))
+			    return false;
+	    }
+
+	    return true;
     }
 
 	/**
@@ -140,14 +141,14 @@ public static class PickleUtils {
 		{
 			case 2:
 				// 2-bytes unsigned int
-				if (BitConverter.IsLittleEndian) return BitConverter.ToUInt16(bytes, offset);
-				// need to byteswap because the converter needs big-endian...
-				return BitConverter.ToUInt16(new[] {bytes[1+offset], bytes[0+offset]}, 0);
+				return BitConverter.IsLittleEndian ? BitConverter.ToUInt16(bytes, offset) :
+					// need to byteswap because the converter needs big-endian...
+					BitConverter.ToUInt16(new[] {bytes[1+offset], bytes[0+offset]}, 0);
 			case 4:
 				// 4-bytes signed int
-				if (BitConverter.IsLittleEndian) return BitConverter.ToInt32(bytes, offset);
-				// need to byteswap because the converter needs big-endian...
-				return BitConverter.ToInt32(new[] {bytes[3+offset], bytes[2+offset], bytes[1+offset], bytes[0+offset]}, 0);
+				return BitConverter.IsLittleEndian ? BitConverter.ToInt32(bytes, offset) :
+					// need to byteswap because the converter needs big-endian...
+					BitConverter.ToInt32(new[] {bytes[3+offset], bytes[2+offset], bytes[1+offset], bytes[0+offset]}, 0);
 			default:
 				throw new PickleException("invalid amount of bytes to convert to int: " + size);
 		}
@@ -212,10 +213,9 @@ public static class PickleUtils {
 		if (bytes.Length-offset<8) {
 			throw new PickleException("decoding double: too few bytes");
 	    }
-    	if(BitConverter.IsLittleEndian) {
-            return BitConverter.Int64BitsToDouble(BinaryPrimitives.ReadInt64BigEndian(bytes.AsSpan(offset)));
-		}
-		return BitConverter.ToDouble(bytes,offset);
+    	return BitConverter.IsLittleEndian ? 
+		    BitConverter.Int64BitsToDouble(BinaryPrimitives.ReadInt64BigEndian(bytes.AsSpan(offset))) 
+		    : BitConverter.ToDouble(bytes,offset);
 	}
 
 	/**
@@ -308,7 +308,7 @@ public static class PickleUtils {
     }
 
 	/**
-	 * Convert a string to a byte array, no encoding is used. String must only contain characters <256.
+	 * Convert a string to a byte array, no encoding is used. String must only contain characters &lt;256.
 	 */
 	public static byte[] str2bytes(string str)  {
 		var b=new byte[str.Length];
@@ -406,7 +406,7 @@ public static class PickleUtils {
 						char h6 = str[++i];
 						char h7 = str[++i];
 						char h8 = str[++i];
-						String encoded = "" + h1 + h2 + h3 + h4 + h5 + h6 + h7 + h8;
+						string encoded = "" + h1 + h2 + h3 + h4 + h5 + h6 + h7 + h8;
 						string s = Char.ConvertFromUtf32(Convert.ToInt32(encoded, 16));
 						sb.Append(s);
 						break;

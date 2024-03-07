@@ -22,7 +22,7 @@ public class DecimalConstructor : IObjectConstructor
 				// special case Decimal("NaN") which is not supported in .NET, return this as double.NaN
 				return double.NaN;
 			}
-			return Decimal.Parse(stringArg, 
+			return decimal.Parse(stringArg, 
 				NumberStyles.AllowLeadingSign | NumberStyles.AllowDecimalPoint | NumberStyles.AllowExponent, 
 				CultureInfo.InvariantCulture);
 		}

@@ -9,6 +9,8 @@ using System.Text;
 using Xunit;
 using Razorvine.Pickle;
 using Razorvine.Pickle.Objects;
+using Xunit.Abstractions;
+
 // ReSharper disable CheckNamespace
 
 namespace PickleTests
@@ -18,6 +20,12 @@ namespace PickleTests
 /// Unit tests for the unpickler. 
 /// </summary>
 public class UnpicklerTests {
+	private readonly ITestOutputHelper _testOutputHelper;
+
+	public UnpicklerTests(ITestOutputHelper testOutputHelper)
+	{
+		_testOutputHelper = testOutputHelper;
+	}
 
 	private static object U(string strdata) 
 	{
@@ -65,7 +73,7 @@ public class UnpicklerTests {
 		Assert.Equal("unicode",U("X\u0007\u0000\u0000\u0000unicode."));
 		Assert.Equal(new Hashtable(),U("}."));
 		Assert.Equal(new ArrayList(),U("]."));
-		Assert.Equal(new object[0], (object[]) U(")."));
+		Assert.Equal(Array.Empty<object>(), (object[]) U(")."));
 		Assert.Equal(1234.5678d, U("G@\u0093JEm\\\u00fa\u00ad."));  // 8-byte binary coded float
 		// protocol level2
 		Assert.True((bool)U("\u0088."));	// True
@@ -80,9 +88,9 @@ public class UnpicklerTests {
 		Assert.Equal(new byte[]{65,66,67}, (byte[]) U("C\u0003ABC."));
 		
 		// high unicode, protocol 1
-		Assert.Equal("tshirt\uD83D\uDC55", (String) U("Vtshirt\\U0001f455\np0\n."));
+		Assert.Equal("tshirt\uD83D\uDC55", (string) U("Vtshirt\\U0001f455\np0\n."));
 		// high unicode, protocol 2 and higher
-		Assert.Equal("tshirt\uD83D\uDC55", (String) U("\u0080\u0002X\n\u0000\u0000\u0000tshirt\u00f0\u009f\u0091\u0095."));
+		Assert.Equal("tshirt\uD83D\uDC55", (string) U("\u0080\u0002X\n\u0000\u0000\u0000tshirt\u00f0\u009f\u0091\u0095."));
 	}
 	
 	[Fact]
@@ -102,11 +110,11 @@ public class UnpicklerTests {
 		
 		MemoryStream bos=new MemoryStream(434);
 		bos.WriteByte(Opcodes.PROTO); bos.WriteByte(2);
-		var data=Encoding.Default.GetBytes("c__builtin__\nbytearray\n");
+		byte[] data=Encoding.Default.GetBytes("c__builtin__\nbytearray\n");
 		bos.Write(data,0,data.Length);
 		bos.WriteByte(Opcodes.BINUNICODE);
 		bos.Write(new byte[] {0x80,0x01,0x00,0x00},0,4);
-		var utf8=Encoding.UTF8.GetBytes(str);
+		byte[] utf8=Encoding.UTF8.GetBytes(str);
 		bos.Write(utf8,0,utf8.Length);
 		bos.WriteByte(Opcodes.BINUNICODE);
 		bos.Write(new byte[] {7,0,0,0},0,4);
@@ -116,8 +124,8 @@ public class UnpicklerTests {
 		bos.WriteByte(Opcodes.REDUCE);
 		bos.WriteByte(Opcodes.STOP);
 		
-		var bytesresult=bos.ToArray();
-		var output=p.dumps(bytes);
+		byte[] bytesresult=bos.ToArray();
+		byte[] output=p.dumps(bytes);
 		Assert.Equal(bytesresult, output);
 		Assert.Equal(bytes, (byte[])u.loads(output)); 
 		
@@ -151,7 +159,7 @@ public class UnpicklerTests {
 	[Fact]
 	public void TestTuples() 
 	{
-		Assert.Equal(new object[0], (object[])U(")."));	// ()
+		Assert.Equal(Array.Empty<object>(), (object[])U(")."));	// ()
 		Assert.Equal(new object[]{97}, (object[])U("Ka\u0085.")); // (97,)
 		Assert.Equal(new object[]{97,98}, (object[])U("KaKb\u0086.")); // (97,98)
 		Assert.Equal(new object[]{97,98,99}, (object[])U("KaKbKc\u0087.")); // (97,98,99)
@@ -264,13 +272,10 @@ public class UnpicklerTests {
 	[Fact]
 	public void TestDateTime() 
 	{
-		DateTime dt;
-		TimeSpan ts;
-		
-		dt=(DateTime)U("cdatetime\ndate\nU\u0004\u0007\u00db\u000c\u001f\u0085R.");
+		var dt = (DateTime)U("cdatetime\ndate\nU\u0004\u0007\u00db\u000c\u001f\u0085R.");
 		Assert.Equal(new DateTime(2011,12,31), dt);
 
-		ts=(TimeSpan)U("cdatetime\ntime\nU\u0006\u000e!;\u0006\u00f5@\u0085R.");
+		var ts = (TimeSpan)U("cdatetime\ntime\nU\u0006\u000e!;\u0006\u00f5@\u0085R.");
 		Assert.Equal(new TimeSpan(0,14,33,59,456), ts);
 		
 		dt=(DateTime)U("cdatetime\ndatetime\nU\n\u0007\u00db\u000c\u001f\u000e!;\u0006\u00f5@\u0085R.");
@@ -300,13 +305,10 @@ public class UnpicklerTests {
 	[Fact]
 	public void TestDateTimePython3() 
 	{
-		DateTime dt;
-		TimeSpan ts;
-
-		dt=(DateTime)U("cdatetime\ndate\nC\u0004\u0007\u00db\u000c\u001f\u0085R.");
+		var dt = (DateTime)U("cdatetime\ndate\nC\u0004\u0007\u00db\u000c\u001f\u0085R.");
 		Assert.Equal(new DateTime(2011,12,31), dt);
 
-		ts=(TimeSpan)U("cdatetime\ntime\nC\u0006\u000e!;\u0006\u00f5@\u0085R.");
+		var ts = (TimeSpan)U("cdatetime\ntime\nC\u0006\u000e!;\u0006\u00f5@\u0085R.");
 		Assert.Equal(new TimeSpan(0,14,33,59,456), ts);
 
 		dt=(DateTime)U("cdatetime\ndatetime\nC\n\u0007\u00db\u000c\u001f\u000e!;\u0006\u00f5@\u0085R.");
@@ -321,7 +323,7 @@ public class UnpicklerTests {
 	{
 		DateTime dt=new DateTime(2011, 10, 10, 9, 13, 10, 10);
 		Pickler p = new Pickler();
-		var pickle = p.dumps(dt);
+		byte[] pickle = p.dumps(dt);
 		Unpickler u = new Unpickler();
 		DateTime dt2 = (DateTime) u.loads(pickle);
 		Assert.Equal(dt, dt2);
@@ -414,7 +416,7 @@ public class UnpicklerTests {
 		byte[] pickled = {
 			128, 2, 99, 95, 95, 98, 117, 105, 108, 116, 105, 110, 95, 95, 10, 98, 121, 116, 101, 115, 10, 113, 0, 41, 82, 113, 1, 46
 		};
-		byte[] obj = (byte[]) (new Unpickler().loads(pickled));
+		byte[] obj = (byte[]) new Unpickler().loads(pickled);
 		Assert.Empty(obj);
 	}
 
@@ -550,7 +552,7 @@ public class UnpicklerTests {
 	public void TestBinint2WithObject() 
 	{
 		Unpickler u=new Unpickler();
-		var data=PickleUtils.str2bytes("\u0080\u0002cIgnore.Ignore\nIgnore\n)\u0081M\u0082#.");
+		byte[] data=PickleUtils.str2bytes("\u0080\u0002cIgnore.Ignore\nIgnore\n)\u0081M\u0082#.");
 		int result=(int) u.loads(data);
 		Assert.Equal(9090,result);
 	}
@@ -565,7 +567,7 @@ public class UnpicklerTests {
         	myList.Add(i.ToString());
         }
 
-        var bytes = pickler.dumps(myList);
+        byte[] bytes = pickler.dumps(myList);
 
         Unpickler unpickler = new Unpickler();
 
@@ -574,7 +576,7 @@ public class UnpicklerTests {
             unpickler.loads(bytes);
         }
 
-        Console.WriteLine(DateTime.Now - start);
+        _testOutputHelper.WriteLine((DateTime.Now - start).ToString());
     }	
     
     
@@ -654,7 +656,7 @@ public class UnpicklerTests {
 	    }
 
 	    Unpickler u = new OutOfBandUnpickler();
-	    Object[] result = (Object[]) u.loads(data);
+	    object[] result = (object[]) u.loads(data);
 	    Assert.Equal(2, result.Length);
 	    Assert.Equal("bufferdata1", result[0]);
 	    Assert.Equal("bufferdata2", result[1]);

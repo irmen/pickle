@@ -25,32 +25,29 @@ public class UnpickleComplexTests
 	{
 		return U(PickleUtils.str2bytes(strdata));
 	}
-	private static object U(byte[] data) 
+	private static object U(byte[] data)
 	{
-		using(Unpickler u=new Unpickler())
-		{
-			return u.loads(data);
-		}
+		using Unpickler u=new Unpickler();
+		return u.loads(data);
 	}
 
 	[Fact]
 	public void TestUnpickleProto0Bytes()
-	{
-		var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("UnitTests.pickled_bytes_level0.dat");
-		var ms = new MemoryStream();
-		stream.CopyTo(ms);
+        {
+            var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("UnitTests.pickled_bytes_level0.dat");
+            var ms = new MemoryStream();
+            stream.CopyTo(ms);
 
-		byte[] pickle = ms.ToArray();
-		string x = (string)(new Unpickler()).loads(pickle);
-		Assert.Equal(2496, x.Length);
+            byte[] pickle = ms.ToArray();
+            string x = (string)new Unpickler().loads(pickle);
+            Assert.Equal(2496, x.Length);
 
-		// validate that the bytes in the string are what we expect (based on md5 hash)
-		SHA1 m = SHA1.Create();
-		var digest = m.ComputeHash(Encoding.UTF8.GetBytes(x));
-		Assert.Equal("22F45B876383C91B1CB20AFE51EE3B30F5A85D4C", BitConverter.ToString(digest).Replace("-", ""));
-	}
-	
-	[Fact]
+            // validate that the bytes in the string are what we expect (based on md5 hash)
+            byte[] digest = SHA1.HashData(Encoding.UTF8.GetBytes(x));
+            Assert.Equal("22F45B876383C91B1CB20AFE51EE3B30F5A85D4C", BitConverter.ToString(digest).Replace("-", ""));
+        }
+
+        [Fact]
 	public void TestUnpickleMemo() {
 		// the pickle is of the following list: [65, 'hello', 'hello', {'recurse': [...]}, 'hello']
 		// i.e. the 4th element is a dict referring back to the list itself and the 'hello' strings are reused
@@ -144,7 +141,7 @@ public class UnpickleComplexTests
 		Assert.Equal("module.myclass", cd["__class__"]);
 		
 		ClassDictConstructor cdc = new ClassDictConstructor("module", "myclass");
-		cd = (ClassDict) cdc.construct(new object[]{});
+		cd = (ClassDict) cdc.construct(Array.Empty<object>());
 		Assert.Equal("module.myclass", cd["__class__"]);
 		
 		Assert.Equal("module.myclass", cd.ClassName);

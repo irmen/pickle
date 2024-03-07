@@ -13,15 +13,15 @@ public class StringConstructor : IObjectConstructor
 {
 	public object construct(object[] args)
 	{
-		if(args.Length==0) {
-			return "";
+		switch (args.Length)
+		{
+			case 0:
+				return "";
+			case 1 when args[0] is string:
+				return (string)args[0];
+			default:
+				throw new PickleException("invalid string constructor arguments");
 		}
-
-		if(args.Length==1 && args[0] is string) {
-			return (string)args[0];
-		}
-
-		throw new PickleException("invalid string constructor arguments");
 	}
 }
 

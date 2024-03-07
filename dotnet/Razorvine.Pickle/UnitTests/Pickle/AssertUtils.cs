@@ -27,8 +27,7 @@ internal static class AssertUtils
 		foreach(object key in expected.Keys) {
 			object ev=expected[key];
 			object av=actualdict[key];
-			var dictionary = ev as IDictionary;
-			if(dictionary != null) {
+			if(ev is IDictionary dictionary) {
 				AssertEqual(dictionary, av);
 			} else {
 				Assert.Equal(ev, av);  // dictionary values must be the same

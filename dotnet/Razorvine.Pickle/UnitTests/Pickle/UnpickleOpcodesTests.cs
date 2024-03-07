@@ -506,7 +506,7 @@ public class UnpickleOpcodesTests: IDisposable {
 	[Fact]
 	public void TestEMPTY_TUPLE() {
 		//EMPTY_TUPLE    = b')'   # push empty tuple
-		Assert.Equal(new object[0], (object[]) U(")."));
+		Assert.Equal(Array.Empty<object>(), (object[]) U(")."));
 	}
 
 	[Fact]
@@ -715,7 +715,7 @@ public class UnpickleOpcodesTests: IDisposable {
 	[Fact]
 	public void TestBINBYTES() {
 		//BINBYTES       = b'B'   # push bytes; counted binary string argument
-		var bytes = new byte[]{};
+		var bytes = Array.Empty<byte>();
 		Assert.Equal(bytes, (byte[]) U("B\u0000\u0000\u0000\u0000."));
 		bytes=new[]{(byte)'a'};
 		Assert.Equal(bytes, (byte[]) U("B\u0001\u0000\u0000\u0000a."));
@@ -732,7 +732,7 @@ public class UnpickleOpcodesTests: IDisposable {
 	[Fact]
 	public void TestBINBYTES8() {
 		//BINBYTES8 = 0x8e;  // push very long bytes string
-		var bytes = new byte[]{};
+		var bytes = Array.Empty<byte>();
 		Assert.Equal(bytes, (byte[]) U("\u008e\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000."));
 		bytes=new[]{(byte)'a'};
 		Assert.Equal(bytes, (byte[]) U("\u008e\u0001\u0000\u0000\u0000\u0000\u0000\u0000\u0000a."));
@@ -757,7 +757,7 @@ public class UnpickleOpcodesTests: IDisposable {
 	[Fact]
 	public void TestSHORT_BINBYTES() {
 		//SHORT_BINBYTES = b'C'   #  push bytes; counted binary string argument < 256 bytes
-		var bytes = new byte[]{};
+		var bytes = Array.Empty<byte>();
 		Assert.Equal(bytes, (byte[]) U("C\u0000."));
 		bytes=new[]{(byte)'a'};
 		Assert.Equal(bytes, (byte[]) U("C\u0001a."));

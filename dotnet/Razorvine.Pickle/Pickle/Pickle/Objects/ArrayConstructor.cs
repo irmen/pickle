@@ -1,7 +1,6 @@
 /* part of Pickle, by Irmen de Jong (irmen@razorvine.net) */
 
 using System;
-using System.Buffers.Binary;
 using System.Collections;
 using System.Diagnostics.CodeAnalysis;
 
@@ -32,8 +31,7 @@ public class ArrayConstructor : IObjectConstructor {
 		}
 
 		string typecode = (string) args[0];
-		ArrayList values = args[1] as ArrayList;
-		if(values==null) {
+		if(!(args[1] is ArrayList values)) {
 			// python 2.6 encodes the array as a string sequence rather than a list
 			// unpickling this is not supported at this time
 			throw new PickleException("unsupported Python 2.6 array pickle format");

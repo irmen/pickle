@@ -1,6 +1,6 @@
 /* part of Pickle, by Irmen de Jong (irmen@razorvine.net) */
 
-using System.IO;
+
 // ReSharper disable InconsistentNaming
 
 namespace Razorvine.Pickle {

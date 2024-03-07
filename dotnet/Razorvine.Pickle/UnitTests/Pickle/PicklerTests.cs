@@ -101,7 +101,7 @@ public class PicklerTests {
 	public void TestArrays() 
 	{
 		Pickler p = new Pickler(false);
-		var o = p.dumps(new string[] {});
+		var o = p.dumps(Array.Empty<string>());
 		Assert.Equal(B(")"), o);
 		o=p.dumps(new [] {"abc"});
 		Assert.Equal(B("X\u0003\u0000\u0000\u0000abc\u0085"), o);
@@ -714,8 +714,8 @@ public class PicklerTests {
     [Fact]
     public void TestStringPersistentID() {
         var obj = new[] {
-            new PersistentClass() { Key = 11 },
-            new PersistentClass() { Key = 22 },
+            new PersistentClass { Key = 11 },
+            new PersistentClass { Key = 22 },
         };
         var p = new PersistentIDPickler(false);
         byte[] data = p.dumps(obj);
@@ -730,8 +730,8 @@ public class PicklerTests {
     [Fact]
     public void TestObjectPersistentID() {
         var obj = new[] {
-            new PersistentClass() { Key = 11 },
-            new PersistentClass() { Key = 22 },
+            new PersistentClass { Key = 11 },
+            new PersistentClass { Key = 22 }
         };
         var p = new PersistentIDPickler(true);
         byte[] data = p.dumps(obj);
@@ -747,13 +747,13 @@ public class PicklerTests {
         public int Key = 22;
     }
     class PersistentIDPickler : Pickler {
-        private bool _idAsObject;
+        private readonly bool _idAsObject;
         public PersistentIDPickler(bool idAsObject) {
             _idAsObject = idAsObject;
         }
         protected override bool persistentId(object pid, out object newpid) {
             if (pid is PersistentClass opid) {
-                newpid = _idAsObject ? opid.Key : (object)opid.Key.ToString();
+                newpid = _idAsObject ? opid.Key : opid.Key.ToString();
                 return true;
             }
             newpid = null;
@@ -761,12 +761,13 @@ public class PicklerTests {
         }
     }
     class PersistentIDUnpickler : Unpickler {
-        private bool _idAsObject;
+        private readonly bool _idAsObject;
         public PersistentIDUnpickler(bool idAsObject) {
             _idAsObject = idAsObject;
         }
         protected override object persistentLoad(object pid) {
-            return new PersistentClass() {
+            return new PersistentClass
+            {
                 Key = _idAsObject ? (int)pid : int.Parse((string)pid)
             };
         }
@@ -775,8 +776,8 @@ public class PicklerTests {
     [Fact]
     public void TestCustomDeconstructedObject() {
         var obj = new[] {
-            new PersistentClass() { Key = 11 },
-            new PersistentClass() { Key = 22 },
+            new PersistentClass { Key = 11 },
+            new PersistentClass { Key = 22 }
         };
         var p = new Pickler();
         Pickler.registerCustomDeconstructor(typeof(PersistentClass), new PersistentClassDeconstructor());
@@ -792,7 +793,7 @@ public class PicklerTests {
 
     class PersistentClassConstructor : IObjectConstructor {
         public object construct(object[] args) {
-            return new PersistentClass() { Key = (int)args[0] };
+            return new PersistentClass { Key = (int)args[0] };
         }
     }
     class PersistentClassDeconstructor : IObjectDeconstructor {

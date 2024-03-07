@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Razorvine.Pickle
 {
-    internal struct StreamWriter : IOutputWriter
+    internal readonly struct StreamWriter : IOutputWriter
     {
         private readonly Stream output;
         private readonly byte[] byteBuffer;

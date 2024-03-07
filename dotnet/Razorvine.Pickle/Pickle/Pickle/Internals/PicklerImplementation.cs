@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
@@ -102,6 +103,7 @@ namespace Razorvine.Pickle
         {
             if (useMemo)
                 WriteMemoPrivate(value);
+            return;
 
             void WriteMemoPrivate(object obj)
             {
@@ -346,6 +348,7 @@ namespace Razorvine.Pickle
             WriteMemo(ts);
         }
 
+        [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
         private void put_enumerable(IEnumerable list)
         {
             output.WriteByte(Opcodes.EMPTY_LIST);
@@ -371,6 +374,7 @@ namespace Razorvine.Pickle
             output.WriteByte(Opcodes.SETITEMS);
         }
 
+        [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
         private void put_set(IEnumerable o)
         {
             output.WriteByte(Opcodes.GLOBAL);

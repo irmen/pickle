@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using BenchmarkDotNet.Attributes;
 using Razorvine.Pickle;
 using System.IO;
@@ -22,7 +23,7 @@ namespace Benchmarks
             double[] doubles = Enumerable.Range(0, Count).Select(x => x * 0.5).ToArray();
             int[] integers = Enumerable.Range(0, Count).ToArray();
             bool[] booleans = Enumerable.Range(0, Count).Select(x => x % 2 == 0).ToArray();
-            string[] strings = doubles.Select(x => x.ToString()).ToArray();
+            string[] strings = doubles.Select(x => x.ToString(CultureInfo.InvariantCulture)).ToArray();
 
             _serializedDoubles = new Pickler().dumps(doubles);
             _serializedIntegers = new Pickler().dumps(integers);
