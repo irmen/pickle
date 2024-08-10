@@ -632,7 +632,17 @@ namespace Razorvine.Pickle
             }
             else
             {
-                output.WriteByte(Opcodes.BINUNICODE);
+                int byteCount = Encoding.UTF8.GetByteCount(str);
+                if (byteCount <= Byte.MaxValue)
+                {
+                    output.WriteByte(Opcodes.SHORT_BINUNICODE);
+                    output.WriteByte((byte)byteCount);
+                }
+                else
+                {
+                    output.WriteByte(Opcodes.BINUNICODE);
+                    output.WriteInt32LittleEndian(byteCount);
+                }
                 output.WriteAsUtf8String(str);
                 WriteMemo(str);
             }

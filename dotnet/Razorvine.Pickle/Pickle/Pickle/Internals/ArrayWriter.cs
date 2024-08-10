@@ -73,7 +73,6 @@ namespace Razorvine.Pickle
         public void WriteAsUtf8String(string str)
         {
             int byteCount = Encoding.UTF8.GetByteCount(str);
-            WriteInt32LittleEndian(byteCount);
 
             EnsureSize(byteCount);
 

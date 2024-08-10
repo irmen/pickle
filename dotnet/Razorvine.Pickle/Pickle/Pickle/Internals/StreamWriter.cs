@@ -56,7 +56,6 @@ namespace Razorvine.Pickle
         public void WriteAsUtf8String(string str)
         {
             var encoded = Encoding.UTF8.GetBytes(str);
-            WriteInt32LittleEndian(encoded.Length);
             Write(encoded, 0, encoded.Length);
         }
 
