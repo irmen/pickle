@@ -116,8 +116,8 @@ public class UnpicklerTests {
 		bos.Write(new byte[] {0x80,0x01,0x00,0x00},0,4);
 		byte[] utf8=Encoding.UTF8.GetBytes(str);
 		bos.Write(utf8,0,utf8.Length);
-		bos.WriteByte(Opcodes.BINUNICODE);
-		bos.Write(new byte[] {7,0,0,0},0,4);
+		bos.WriteByte(Opcodes.SHORT_BINUNICODE);
+		bos.WriteByte(7);
 		data=Encoding.Default.GetBytes("latin-1");
 		bos.Write(data,0,data.Length);
 		bos.WriteByte(Opcodes.TUPLE2);

@@ -57,13 +57,13 @@ public class PicklerTests {
 		byte[] o=p.dumps(null);	// none
 		Assert.Equal(B("N"), o); 
 		o=p.dumps('@');  // char --> string
-		Assert.Equal(B("X\u0001\u0000\u0000\u0000@"), o);
+		Assert.Equal(B("\u008c\u0001@"), o);
 		o=p.dumps(true);	// bool
 		Assert.Equal(B("\u0088"), o);
 		o=p.dumps("hello");      // unicode string
-		Assert.Equal(B("X\u0005\u0000\u0000\u0000hello"), o);
+		Assert.Equal(B("\u008c\u0005hello"), o);
 		o=p.dumps("hello\u20ac");      // unicode string with non ascii
-		Assert.Equal(B("X\u0008\u0000\u0000\u0000hello\u00e2\u0082\u00ac"), o);
+		Assert.Equal(B("\u008c\u0008hello\u00e2\u0082\u00ac"), o);
 		o=p.dumps((byte)'@');
 		Assert.Equal(B("K@"), o);
 		o=p.dumps((sbyte)-40);
@@ -86,15 +86,18 @@ public class PicklerTests {
 		o=p.dumps(1234.5f);
 		Assert.Equal(B(new byte[] {(byte)'G',0x40,0x93,0x4a,0,0,0,0,0}), o);
 		o=p.dumps(1234.9876543210987654321m);
-		Assert.Equal(B("cdecimal\nDecimal\nX\u0018\u0000\u0000\u00001234.9876543210987654321\u0085R"), o);
+		Assert.Equal(B("cdecimal\nDecimal\n\u008c\u00181234.9876543210987654321\u0085R"), o);
+		string longString = "ThequickbrownfoxjumpsoverthelazydogThequickbrownfoxjumpsoverthelazydogThequickbrownfoxjumpsoverthelazydogThequickbrownfoxjumpsoverthelazydogThequickbrownfoxjumpsoverthelazydogThequickbrownfoxjumpsoverthelazydogThequickbrownfoxjumpsoverthelazydogThequickbrownfoxjumpsoverthelazydog";
+		o=p.dumps(longString);
+		Assert.Equal(B($"X\u0018\u0001\u0000\u0000{longString}"), o);
 		
 		const DayEnum day = DayEnum.Wednesday;
 		o=p.dumps(day);	// enum is returned as just a string representing the value
-		Assert.Equal(B("X\u0009\u0000\u0000\u0000Wednesday"),o);
+		Assert.Equal(B("\u008c\u0009Wednesday"),o);
 		
 		
-		o=p.dumps("tshirt👕");		// t-shirt U+1f455
-		Assert.Equal(B("X\n\u0000\u0000\u0000tshirt\u00f0\u009f\u0091\u0095"),o);
+		o=p.dumps("tshirt?");		// t-shirt U+1f455
+		Assert.Equal(B("\u008c\ntshirt\u00f0\u009f\u0091\u0095"),o);
 	}
 	
 	[Fact]
@@ -104,22 +107,22 @@ public class PicklerTests {
 		var o = p.dumps(Array.Empty<string>());
 		Assert.Equal(B(")"), o);
 		o=p.dumps(new [] {"abc"});
-		Assert.Equal(B("X\u0003\u0000\u0000\u0000abc\u0085"), o);
+		Assert.Equal(B("\u008c\u0003abc\u0085"), o);
 		o=p.dumps(new [] {"abc","def"});
-		Assert.Equal(B("X\u0003\u0000\u0000\u0000abcX\u0003\u0000\u0000\u0000def\u0086"), o);
+		Assert.Equal(B("\u008c\u0003abc\u008c\u0003def\u0086"), o);
 		o=p.dumps(new [] {"abc","def","ghi"});
-		Assert.Equal(B("X\u0003\u0000\u0000\u0000abcX\u0003\u0000\u0000\u0000defX\u0003\u0000\u0000\u0000ghi\u0087"), o);
+		Assert.Equal(B("\u008c\u0003abc\u008c\u0003def\u008c\u0003ghi\u0087"), o);
 		o=p.dumps(new [] {"abc","def","ghi","jkl"});
-		Assert.Equal(B("(X\u0003\u0000\u0000\u0000abcX\u0003\u0000\u0000\u0000defX\u0003\u0000\u0000\u0000ghiX\u0003\u0000\u0000\u0000jklt"), o);
+		Assert.Equal(B("(\u008c\u0003abc\u008c\u0003def\u008c\u0003ghi\u008c\u0003jklt"), o);
 
 		o=p.dumps(new [] {'A','B','C'});
-		Assert.Equal(B("X\u0003\u0000\u0000\u0000ABC"), o);
+		Assert.Equal(B("\u008c\u0003ABC"), o);
 
 		o=p.dumps(new [] {true,false,true});
 		Assert.Equal(B("\u0088\u0089\u0088\u0087"), o);
 
 		o=p.dumps(new byte[] {1,2,3});
-		Assert.Equal(B("c__builtin__\nbytearray\nX\u0003\u0000\u0000\u0000\u0001\u0002\u0003X\u0007\u0000\u0000\u0000latin-1\u0086R"), o);
+		Assert.Equal(B("c__builtin__\nbytearray\n\u008c\u0003\u0001\u0002\u0003\u008c\u0007latin-1\u0086R"), o);
 
 		o=p.dumps(new [] {1,2,3});
 		Assert.Equal(B("carray\narray\nU\u0001i](K\u0001K\u0002K\u0003e\u0086R"), o);
@@ -224,14 +227,14 @@ public class PicklerTests {
 		list.Add("abc");
 		list.Add(null);
 		var o = p.dumps(list);
-		Assert.Equal(B("](K\u0001X\u0003\u0000\u0000\u0000abcNe"), o);
+		Assert.Equal(B("](K\u0001\u008c\u0003abcNe"), o);
 		
 		IList<object> ilist=new List<object>();
 		ilist.Add(1);
 		ilist.Add("abc");
 		ilist.Add(null);
 		o=p.dumps(ilist);
-		Assert.Equal(B("](K\u0001X\u0003\u0000\u0000\u0000abcNe"), o);
+		Assert.Equal(B("](K\u0001\u008c\u0003abcNe"), o);
 
 		Stack<int> stack=new Stack<int>();
 		stack.Push(1);
@@ -433,7 +436,7 @@ public class PicklerTests {
 		list.Add(another);
 		list.Add(sublist);
 		var o = p.dumps(list);
-		Assert.Equal("\x80\x02]q\x00(X\x06\x00\x00\x0000reusedq\x01h\x01X\x07\x00\x00\x0000anotherq\x02]q\x03(h\x01h\x01h\x0002ee.", S(o));
+		Assert.Equal("\x80\x02]q\x00(\x8c\x06reusedq\x01h\x01\x8c\x0007anotherq\x02]q\x03(h\x01h\x01h\x0002ee.", S(o));
 		
 		Unpickler u = new Unpickler();
 		ArrayList data = (ArrayList) u.loads(o);
@@ -478,7 +481,7 @@ public class PicklerTests {
 		list.Add(reused);
 		list.Add(list);
 		var o = p.dumps(list);
-		Assert.Equal("\x80\x02]q\x00(X\x06\x00\x00\x0000reusedq\x01h\x01h\x0000e.", S(o));
+		Assert.Equal("\x80\x02]q\x00(\x8c\x06reusedq\x01h\x01h\x0000e.", S(o));
 
 		Unpickler u = new Unpickler();
 		ArrayList data = (ArrayList) u.loads(o);
@@ -495,7 +498,7 @@ public class PicklerTests {
 		Hashtable h = new Hashtable();
 		h["myself"] = h;
 		o=p.dumps(h);
-		Assert.Equal("\x80\x02}q\x00(X\x06\x00\x00\x0000myselfq\x01h\x0000u.", S(o));
+		Assert.Equal("\x80\x02}q\x00(\x8c\x06myselfq\x01h\x0000u.", S(o));
 		Hashtable h2 = (Hashtable) u.loads(o);
 		Assert.Single(h2);
 		Assert.Same(h2, h2["myself"]);
