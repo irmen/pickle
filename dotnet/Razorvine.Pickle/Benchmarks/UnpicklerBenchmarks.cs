@@ -10,7 +10,7 @@ namespace Benchmarks
     public class UnpicklerBenchmarks
     {
         [Params(100, 1000)]
-        public int Count { get; set;}
+        public int Count { get; set; }
 
         private byte[] _serializedDoubles;
         private byte[] _serializedIntegers;
