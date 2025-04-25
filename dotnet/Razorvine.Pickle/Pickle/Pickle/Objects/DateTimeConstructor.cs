@@ -26,20 +26,16 @@ public class DateTimeConstructor : IObjectConstructor {
 		_pythontype = pythontype;
 	}
 
-	public object construct(object[] args) {
-		switch(_pythontype)
+	public object construct(object[] args)
+	{
+		return _pythontype switch
 		{
-			case PythonType.Date:
-				return CreateDate(args);
-			case PythonType.Time:
-				return CreateTime(args);
-			case PythonType.DateTime:
-				return CreateDateTime(args);
-			case PythonType.TimeDelta:
-				return CreateTimedelta(args);
-			default:
-				throw new PickleException("invalid object type");
-		}
+			PythonType.Date => CreateDate(args),
+			PythonType.Time => CreateTime(args),
+			PythonType.DateTime => CreateDateTime(args),
+			PythonType.TimeDelta => CreateTimedelta(args),
+			_ => throw new PickleException("invalid object type")
+		};
 	}
 
 	private static TimeSpan CreateTimedelta(object[] args) {

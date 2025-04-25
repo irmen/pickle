@@ -3,7 +3,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyName>Razorvine.Pickle</AssemblyName>
     <RootNamespace>Razorvine</RootNamespace>
-    <LangVersion>7.3</LangVersion>
+    <LangVersion>9</LangVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Authors>Irmen de Jong</Authors>
     <Product>Python pickle serialization protocol library for .NET</Product>
@@ -25,6 +25,6 @@
     <PackageReleaseNotes>Stand alone pickle library.</PackageReleaseNotes>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="System.Memory" Version="4.6.0" />
+    <PackageReference Include="System.Memory" Version="4.6.3" />
   </ItemGroup>
 </Project>

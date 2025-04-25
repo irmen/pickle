@@ -13,9 +13,8 @@ public class SetConstructor : IObjectConstructor {
 
 	public object construct(object[] args) {
 		// create a HashSet, args=arraylist of stuff to put in it
-		ArrayList elements=(ArrayList)args[0];
-		IEnumerable<object> array=elements.ToArray();
-		return new HashSet<object>(array);
+		var elements=(ArrayList)args[0];
+		return new HashSet<object>(elements.ToArray());
 	}
 }
 

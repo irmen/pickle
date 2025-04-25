@@ -21,7 +21,7 @@ public static class PickleUtils {
 	 * read a line of text, possibly including the terminating LF char
 	 */
 	public static string readline(Stream input, bool includeLF = false) {
-		StringBuilder sb = new StringBuilder();
+		var sb = new StringBuilder();
 		while (true) {
 			int c = input.ReadByte();
 			if (c == -1) {
@@ -137,21 +137,25 @@ public static class PickleUtils {
 	{
 		// this operates on little-endian bytes
 
-		switch (size)
+		return size switch
 		{
-			case 2:
+			2 =>
 				// 2-bytes unsigned int
-				return BitConverter.IsLittleEndian ? BitConverter.ToUInt16(bytes, offset) :
+				BitConverter.IsLittleEndian
+					? BitConverter.ToUInt16(bytes, offset)
+					:
 					// need to byteswap because the converter needs big-endian...
-					BitConverter.ToUInt16(new[] {bytes[1+offset], bytes[0+offset]}, 0);
-			case 4:
+					BitConverter.ToUInt16(new[] { bytes[1 + offset], bytes[0 + offset] }, 0),
+			4 =>
 				// 4-bytes signed int
-				return BitConverter.IsLittleEndian ? BitConverter.ToInt32(bytes, offset) :
+				BitConverter.IsLittleEndian
+					? BitConverter.ToInt32(bytes, offset)
+					:
 					// need to byteswap because the converter needs big-endian...
-					BitConverter.ToInt32(new[] {bytes[3+offset], bytes[2+offset], bytes[1+offset], bytes[0+offset]}, 0);
-			default:
-				throw new PickleException("invalid amount of bytes to convert to int: " + size);
-		}
+					BitConverter.ToInt32(
+						new[] { bytes[3 + offset], bytes[2 + offset], bytes[1 + offset], bytes[0 + offset] }, 0),
+			_ => throw new PickleException("invalid amount of bytes to convert to int: " + size)
+		};
 	}
 
 	/**
@@ -227,7 +231,7 @@ public static class PickleUtils {
 	    }
     	if(BitConverter.IsLittleEndian) {
             int intVal = BinaryPrimitives.ReadInt32BigEndian(bytes.AsSpan(offset));
-            unsafe { return *(float*)&intVal; };
+            unsafe { return *(float*)&intVal; }
 		}
 		return BitConverter.ToSingle(bytes,offset);
 	}
@@ -238,24 +242,29 @@ public static class PickleUtils {
 	 * and raise an exception if it's bigger.
 	 */
 	public static IComparable decode_long(ReadOnlySpan<byte> data) {
-		if (data.Length == 0)
-			return 0L;
-		if (data.Length > 8)
-			return new BigInteger(data.ToArray());
-
-		if( data.Length<8) {
-			// bitconverter requires exactly 8 bytes so we need to extend it
-			var larger=new byte[8];
-			data.CopyTo(larger);
+		switch (data.Length)
+		{
+			case 0:
+				return 0L;
+			case > 8:
+				return new BigInteger(data.ToArray());
+			case < 8:
+			{
+				// bitconverter requires exactly 8 bytes so we need to extend it
+				var larger=new byte[8];
+				data.CopyTo(larger);
 			
-			// check if we need to sign-extend (if the original number was negative)
-			if((data[data.Length-1]&0x80) == 0x80) {
-				for(int i=data.Length; i<8; ++i) {
-					larger[i]=0xff;
+				// check if we need to sign-extend (if the original number was negative)
+				if((data[data.Length-1]&0x80) == 0x80) {
+					for(int i=data.Length; i<8; ++i) {
+						larger[i]=0xff;
+					}
 				}
+				data=larger;
+				break;
 			}
-			data=larger;
 		}
+
 		return BinaryPrimitives.ReadInt64LittleEndian(data);
 	}
 	
@@ -326,7 +335,7 @@ public static class PickleUtils {
 	public static string decode_escaped(string str) {
 		if(str.IndexOf('\\')==-1)
 			return str;
-		StringBuilder sb=new StringBuilder(str.Length);
+		var sb=new StringBuilder(str.Length);
 		for(int i=0; i<str.Length; ++i) {
 			char c=str[i];
 			if(c=='\\') {
@@ -374,7 +383,7 @@ public static class PickleUtils {
 	public static string decode_unicode_escaped(string str) {
 		if(str.IndexOf('\\')==-1)
 			return str;
-		StringBuilder sb=new StringBuilder(str.Length);
+		var sb=new StringBuilder(str.Length);
 		for(int i=0; i<str.Length; ++i) {
 			char c=str[i];
 			if(c=='\\') {
@@ -407,7 +416,7 @@ public static class PickleUtils {
 						char h7 = str[++i];
 						char h8 = str[++i];
 						string encoded = "" + h1 + h2 + h3 + h4 + h5 + h6 + h7 + h8;
-						string s = Char.ConvertFromUtf32(Convert.ToInt32(encoded, 16));
+						string s = char.ConvertFromUtf32(Convert.ToInt32(encoded, 16));
 						sb.Append(s);
 						break;
 					}

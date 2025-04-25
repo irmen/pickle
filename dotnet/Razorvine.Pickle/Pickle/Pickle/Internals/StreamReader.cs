@@ -13,7 +13,7 @@ namespace Razorvine.Pickle
         public StreamReader(Stream input)
         {
             this.input = input;
-            this.buffer = new byte[sizeof(long)]; // at least large enough for any primitive being deserialized;
+            buffer = new byte[sizeof(long)]; // at least large enough for any primitive being deserialized;
         }
 
         public byte ReadByte() => PickleUtils.readbyte(input);

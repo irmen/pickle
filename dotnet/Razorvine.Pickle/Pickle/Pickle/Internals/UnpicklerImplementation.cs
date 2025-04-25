@@ -8,7 +8,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Numerics;
-using System.Reflection;
 
 namespace Razorvine.Pickle
 {
@@ -17,7 +16,7 @@ namespace Razorvine.Pickle
     // please see https://adamsitnik.com/Value-Types-vs-Reference-Types/#how-to-avoid-boxing-with-value-types-that-implement-interfaces for more
     internal class UnpicklerImplementation<T> where T : struct, IInputReader
     {
-        private static readonly string[] quoteStrings = new[] { "\"", "'" };
+        private static readonly string[] quoteStrings = { "\"", "'" };
         private static readonly object boxedFalse = false;
         private static readonly object boxedTrue = true;
 
@@ -294,7 +293,7 @@ namespace Razorvine.Pickle
             // call the __setstate__ method with the given arguments
             try
             {
-                MethodInfo setStateMethod = target.GetType().GetMethod("__setstate__", argumentTypes);
+                var setStateMethod = target.GetType().GetMethod("__setstate__", argumentTypes);
                 if (setStateMethod == null)
                 {
                     throw new PickleException($"no __setstate__() found in type {target.GetType()} with argument type {args.GetType()}");
@@ -331,7 +330,7 @@ namespace Razorvine.Pickle
 
         private void load_int()
         {
-            ReadOnlySpan<byte> bytes = input.ReadLineBytes(includeLF: true);
+            var bytes = input.ReadLineBytes(includeLF: true);
             if (bytes.Length == 3 && bytes[2] == (byte)'\n' && bytes[0] == (byte)'0')
             {
                 switch (bytes[1])
@@ -389,7 +388,7 @@ namespace Razorvine.Pickle
             {
                 stack.add(longvalue);
             }
-            else if(BigInteger.TryParse(val, out BigInteger bigInteger))
+            else if(BigInteger.TryParse(val, out var bigInteger))
             {
                 stack.add(bigInteger);
             }
@@ -413,7 +412,7 @@ namespace Razorvine.Pickle
 
         private void load_float()
         {
-            ReadOnlySpan<byte> bytes = input.ReadLineBytes(includeLF: true);
+            var bytes = input.ReadLineBytes(includeLF: true);
             if (!Utf8Parser.TryParse(bytes, out double d, out int bytesConsumed) || !PickleUtils.IsWhitespace(bytes.Slice(bytesConsumed)))
             {
                 throw new FormatException();
@@ -553,14 +552,14 @@ namespace Razorvine.Pickle
 
         private void load_list()
         {
-            ArrayList top = stack.pop_all_since_marker();
+            var top = stack.pop_all_since_marker();
             stack.add(top); // simply add the top items as a list to the stack again
         }
 
         private void load_dict()
         {
             object[] top = stack.pop_all_since_marker_as_array();
-            Hashtable map = new Hashtable(top.Length);
+            var map = new Hashtable(top.Length);
             for (int i = 0; i < top.Length; i += 2)
             {
                 object key = top[i];
@@ -605,7 +604,7 @@ namespace Razorvine.Pickle
 
         private void load_global_sub(string module, string name)
         {
-            if (Unpickler.objectConstructors.TryGetValue(GetModuleNameKey(module, name), out IObjectConstructor constructor))
+            if (Unpickler.objectConstructors.TryGetValue(GetModuleNameKey(module, name), out var constructor))
             {
                 stack.add(constructor);
                 return;
@@ -706,14 +705,14 @@ namespace Razorvine.Pickle
         private void load_append()
         {
             object value = stack.pop();
-            ArrayList list = (ArrayList)stack.peek();
+            var list = (ArrayList)stack.peek();
             list.Add(value);
         }
 
         private void load_appends()
         {
             object[] top = stack.pop_all_since_marker_as_array();
-            ArrayList list = (ArrayList)stack.peek();
+            var list = (ArrayList)stack.peek();
             foreach (object t in top)
             {
                 list.Add(t);
@@ -724,7 +723,7 @@ namespace Razorvine.Pickle
         {
             object value = stack.pop();
             object key = stack.pop();
-            Hashtable dict = (Hashtable)stack.peek();
+            var dict = (Hashtable)stack.peek();
             dict[key] = value;
         }
 
@@ -739,7 +738,7 @@ namespace Razorvine.Pickle
                 value = stack.pop();
             }
 
-            Hashtable dict = (Hashtable)stack.peek();
+            var dict = (Hashtable)stack.peek();
             foreach (var item in newitems)
             {
                 dict[item.Key] = item.Value;
@@ -754,7 +753,7 @@ namespace Razorvine.Pickle
         private void load_reduce()
         {
             var args = (object[])stack.pop();
-            IObjectConstructor constructor = (IObjectConstructor)stack.pop();
+            var constructor = (IObjectConstructor)stack.pop();
             stack.add(constructor.construct(args));
         }
 
@@ -765,9 +764,9 @@ namespace Razorvine.Pickle
 
         private void load_newobj_ex()
         {
-            Hashtable kwargs = (Hashtable)stack.pop();
+            var kwargs = (Hashtable)stack.pop();
             var args = (object[])stack.pop();
-            IObjectConstructor constructor = (IObjectConstructor)stack.pop();
+            var constructor = (IObjectConstructor)stack.pop();
             if (kwargs.Count == 0)
                 stack.add(constructor.construct(args));
             else
@@ -819,7 +818,7 @@ namespace Razorvine.Pickle
 
             object[] args = stack.pop_all_since_marker_as_array();
 
-            if (!Unpickler.objectConstructors.TryGetValue(GetModuleNameKey(module, classname), out IObjectConstructor constructor))
+            if (!Unpickler.objectConstructors.TryGetValue(GetModuleNameKey(module, classname), out var constructor))
             {
                 constructor = new ClassDictConstructor(module, classname);
                 args = Array.Empty<object>(); // classdict doesn't have constructor args... so we may lose info here, hmm.
@@ -829,10 +828,7 @@ namespace Razorvine.Pickle
 
         private string GetModuleNameKey(string module, string name)
         {
-            if (concatenatedModuleNames == null)
-            {
-                concatenatedModuleNames = new Dictionary<StringPair, string>();
-            }
+            concatenatedModuleNames ??= new Dictionary<StringPair, string>();
 
             var sp = new StringPair(module, name);
             if (!concatenatedModuleNames.TryGetValue(sp, out string key))

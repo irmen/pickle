@@ -69,7 +69,7 @@ namespace Razorvine.Pickle
         /// be used as the arguments for reconstructing when unpickling.
         /// </summary>
         /// <param name="clazz">the custom class</param>
-        /// <param name="pickler">additional object deconstructor</param>
+        /// <param name="deconstructor">additional object deconstructor</param>
         public static void registerCustomDeconstructor(Type clazz, IObjectDeconstructor deconstructor) => customDeconstructors[clazz] = deconstructor;
 
         /// <summary>

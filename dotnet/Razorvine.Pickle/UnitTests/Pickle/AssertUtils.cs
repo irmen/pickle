@@ -16,10 +16,10 @@ internal static class AssertUtils
 	public static void AssertEqual(IDictionary expected, object actual)
 	{
 		if(expected.Equals(actual)) return;
-		IDictionary actualdict=(IDictionary)actual;
+		var actualdict=(IDictionary)actual;
 		Assert.Equal(expected.Count, actualdict.Count); // dictionary size must be equal
-		ArrayList keys1=new ArrayList(expected.Keys);
-		ArrayList keys2=new ArrayList(actualdict.Keys);
+		var keys1=new ArrayList(expected.Keys);
+		var keys2=new ArrayList(actualdict.Keys);
 		keys1.Sort();
 		keys2.Sort();
 		Assert.Equal(keys1, keys2);  // dictionary keys must be the same

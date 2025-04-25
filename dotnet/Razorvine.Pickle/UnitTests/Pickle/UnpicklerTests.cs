@@ -32,12 +32,10 @@ public class UnpicklerTests {
 		return U(PickleUtils.str2bytes(strdata));
 	}
 
-	private static object U(byte[] data) 
+	private static object U(byte[] data)
 	{
-		using (var u = new Unpickler())
-		{
-			return u.loads(data);
-		}
+		using var u = new Unpickler();
+		return u.loads(data);
 	}
 	
 	
@@ -99,16 +97,16 @@ public class UnpicklerTests {
 		for(int b=0; b<256; ++b) {
 			bytes[b]=(byte)b;
 		}
-		StringBuilder sb=new StringBuilder();
+		var sb=new StringBuilder();
 		for(int i=0; i<256; ++i) {
 			sb.Append((char)i);
 		}
 		string str=sb.ToString();
 		
-		Pickler p=new Pickler(false);
-		Unpickler u=new Unpickler();
+		var p=new Pickler(false);
+		var u=new Unpickler();
 		
-		MemoryStream bos=new MemoryStream(434);
+		var bos=new MemoryStream(434);
 		bos.WriteByte(Opcodes.PROTO); bos.WriteByte(2);
 		byte[] data=Encoding.Default.GetBytes("c__builtin__\nbytearray\n");
 		bos.Write(data,0,data.Length);
@@ -183,9 +181,9 @@ public class UnpicklerTests {
 	[Fact]
 	public void TestDicts() 
 	{
-		Hashtable map=new Hashtable();
-		Hashtable map2=new Hashtable();
-		ArrayList list=new ArrayList();
+		var map=new Hashtable();
+		var map2=new Hashtable();
+		var list=new ArrayList();
 		Assert.Equal(map, U("}.") );	// {}
 		map.Add(97, 98);
 		map.Add(99, 100);
@@ -229,7 +227,7 @@ public class UnpicklerTests {
 		AssertUtils.AssertEqual(map, U("(dp0\nS'abc'\np1\n(dp2\nS'def'\np3\n(lp4\nI111\naI111\nass.")); // {'abc': {'def': [111,111] }}
 		AssertUtils.AssertEqual(map, U("\u0080\u0002}q\u0000U\u0003abcq\u0001}q\u0002U\u0003defq\u0003]q\u0004(KoKoess.")); // {'abc': {'def': [111,111] }}
 
-		ArrayList list2 = new ArrayList {222, 222};
+		var list2 = new ArrayList {222, 222};
 		map2["ghi"]=list2;
 		AssertUtils.AssertEqual(map, U("(dp0\nS'abc'\np1\n(dp2\nS'ghi'\np3\n(lp4\nI222\naI222\nasS'def'\np5\n(lp6\nI111\naI111\nass.")); // {'abc': {'def': [111,111], ghi: [222,222] }}
 		AssertUtils.AssertEqual(map, U("\u0080\u0002}q\u0000U\u0003abcq\u0001}q\u0002(U\u0003ghiq\u0003]q\u0004(K\u00deK\u00deeU\u0003defq\u0005]q\u0006(KoKoeus.")); // {'abc': {'def': [111,111], ghi: [222,222] }}
@@ -244,7 +242,7 @@ public class UnpicklerTests {
 	[Fact]
 	public void TestComplex() 
 	{
-		ComplexNumber c=new ComplexNumber(2.0, 4.0);
+		var c=new ComplexNumber(2.0, 4.0);
 		Assert.Equal(c, U("c__builtin__\ncomplex\np0\n(F2.0\nF4.0\ntp1\nRp2\n."));
 		Assert.Equal(c, U("c__builtin__\ncomplex\nq\u0000G@\u0000\u0000\u0000\u0000\u0000\u0000\u0000G@\u0010\u0000\u0000\u0000\u0000\u0000\u0000\u0086q\u0001Rq\u0002."));
 	}
@@ -321,11 +319,11 @@ public class UnpicklerTests {
 	[Fact]
 	public void TestDateTimeStringEscaping()
 	{
-		DateTime dt=new DateTime(2011, 10, 10, 9, 13, 10, 10);
-		Pickler p = new Pickler();
+		var dt=new DateTime(2011, 10, 10, 9, 13, 10, 10);
+		var p = new Pickler();
 		byte[] pickle = p.dumps(dt);
-		Unpickler u = new Unpickler();
-		DateTime dt2 = (DateTime) u.loads(pickle);
+		var u = new Unpickler();
+		var dt2 = (DateTime) u.loads(pickle);
 		Assert.Equal(dt, dt2);
 		
 		dt = new DateTime(2011, 10, 9, 13, 10, 9, 10);
@@ -513,13 +511,13 @@ public class UnpicklerTests {
 	[Fact]
 	public void TestMemoing() 
 	{
-		ArrayList list = new ArrayList {"irmen", "irmen", "irmen"};
+		var list = new ArrayList {"irmen", "irmen", "irmen"};
 
 		Assert.Equal(list, U("]q\u0000(U\u0005irmenq\u0001h\u0001h\u0001e."));
 
-		ArrayList a = new ArrayList {111};
-		ArrayList b = new ArrayList {222};
-		ArrayList c = new ArrayList {333};
+		var a = new ArrayList {111};
+		var b = new ArrayList {222};
+		var c = new ArrayList {333};
 
 		object[] array={a,b,c,a,b,c};
 		Assert.Equal(array, (object[]) U("((lp0\nI111\na(lp1\nI222\na(lp2\nI333\nag0\ng1\ng2\ntp3\n."));
@@ -551,7 +549,7 @@ public class UnpicklerTests {
 	[Fact]
 	public void TestBinint2WithObject() 
 	{
-		Unpickler u=new Unpickler();
+		var u=new Unpickler();
 		byte[] data=PickleUtils.str2bytes("\u0080\u0002cIgnore.Ignore\nIgnore\n)\u0081M\u0082#.");
 		int result=(int) u.loads(data);
 		Assert.Equal(9090,result);
@@ -560,7 +558,7 @@ public class UnpicklerTests {
 	[Fact(Skip = "performancetest")]
     public void TestUnpicklingPerformance()
     {
-        Pickler pickler = new Pickler();
+        var pickler = new Pickler();
 
         var myList = new List<string>();
         for (int i = 0; i < 10; i++) {
@@ -569,9 +567,9 @@ public class UnpicklerTests {
 
         byte[] bytes = pickler.dumps(myList);
 
-        Unpickler unpickler = new Unpickler();
+        var unpickler = new Unpickler();
 
-        DateTime start = DateTime.Now;
+        var start = DateTime.Now;
         for (int i = 0; i < 1000000; i++) {
             unpickler.loads(bytes);
         }
@@ -631,9 +629,9 @@ public class UnpicklerTests {
     public void TestProtocol5bytearray()
     {
 	    // ["string", bytearray(b'irmen')]  ->  produces a protocol 5 pickle with opcode BYTEARRAY8
-	    Unpickler u = new Unpickler();
+	    var u = new Unpickler();
 	    byte[] data = PickleUtils.str2bytes("\u0080\u0005\u0095\u001d\u0000\u0000\u0000\u0000\u0000\u0000\u0000]\u0094(\u008c\u0006string\u0094\u0096\u0005\u0000\u0000\u0000\u0000\u0000\u0000\u0000irmen\u0094e.");
-	    ArrayList result = (ArrayList) u.loads(data);
+	    var result = (ArrayList) u.loads(data);
 	    Assert.Equal(2, result.Count);
 	    Assert.Equal("string", result[0]);
 	    Assert.Equal(new byte[]{105, 114, 109, 101, 110}, result[1]);
@@ -648,7 +646,7 @@ public class UnpicklerTests {
 	     */
 	    byte[] data = PickleUtils.str2bytes("\u0080\u0005\u0095\u0006\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0097\u0098\u0097\u0086\u0094.");
 	    try {
-		    Unpickler fu = new Unpickler();
+		    var fu = new Unpickler();
 		    fu.loads(data);
 		    Assert.Fail("should give error");
 	    } catch(PickleException x) {

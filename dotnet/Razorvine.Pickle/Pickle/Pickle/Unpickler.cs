@@ -107,7 +107,7 @@ public class Unpickler : IDisposable {
     public object loads(ReadOnlyMemory<byte> pickledata, int stackCapacity = UnpickleStack.DefaultCapacity) {
         // ROM is super fast for .NET Core 3.0, but Array is fast for all the runtimes
         // if we can get an array out of ROM, we use the Array instead
-        if (MemoryMarshal.TryGetArray(pickledata, out ArraySegment<byte> arraySegment))
+        if (MemoryMarshal.TryGetArray(pickledata, out var arraySegment))
             return loads(arraySegment.Array, stackCapacity);
 
         stack = new UnpickleStack(stackCapacity);

@@ -1,7 +1,6 @@
 ﻿using BenchmarkDotNet.Attributes;
 using Razorvine.Pickle;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -29,7 +28,7 @@ namespace Benchmarks
         [GlobalSetup]
         public void Setup()
         {
-            IEnumerable<T> input = Enumerable.Range(0, Count).Select(GetValue);
+            var input = Enumerable.Range(0, Count).Select(GetValue);
 
             if (Boxed) // a common case in dotnet/spark
                 _value = input.Select(x => (object)x).ToArray();

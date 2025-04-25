@@ -1,6 +1,5 @@
 /* part of Pickle, by Irmen de Jong (irmen@razorvine.net) */
 
-using System;
 using System.Globalization;
 
 namespace Razorvine.Pickle.Objects

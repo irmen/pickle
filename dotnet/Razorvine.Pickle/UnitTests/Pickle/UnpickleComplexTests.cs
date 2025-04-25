@@ -27,7 +27,7 @@ public class UnpickleComplexTests
 	}
 	private static object U(byte[] data)
 	{
-		using Unpickler u=new Unpickler();
+		using var u=new Unpickler();
 		return u.loads(data);
 	}
 
@@ -53,13 +53,13 @@ public class UnpickleComplexTests
 		// i.e. the 4th element is a dict referring back to the list itself and the 'hello' strings are reused
 		byte[] pickle = {128, 2, 93, 113, 0, 40, 75, 65, 85, 5, 104, 101, 108, 108, 111, 113, 1, 104, 1, 125, 113, 2,
 			85, 7, 114, 101, 99, 117, 114, 115, 101, 113, 3, 104, 0, 115, 104, 1, 101, 46};
-		ArrayList a = (ArrayList) U(pickle);
+		var a = (ArrayList) U(pickle);
 		Assert.Equal(5, a.Count);
 		Assert.Equal(65, a[0]);
 		Assert.Equal("hello", a[1]);
 		Assert.Same(a[1], a[2]);
 		Assert.Same(a[1], a[4]);
-		Hashtable h = (Hashtable) a[3];
+		var h = (Hashtable) a[3];
 		Assert.Same(a, h["recurse"]);
 	}
 		 
@@ -116,7 +116,7 @@ public class UnpickleComplexTests
 				case 3:
 					string name = (string)args[0];
 					int age = (int) args[1];
-					ArrayList values = (ArrayList) args[2];
+					var values = (ArrayList) args[2];
 					return new CustomClazz(name, age, values);
 				default:
 					throw new PickleException("expected 0 or 3 constructor arguments");
@@ -128,7 +128,7 @@ public class UnpickleComplexTests
 	public void TestUnpickleCustomClassAsClassDict() {
 		byte[] pickled = {128, 2, 99, 95, 95, 109, 97, 105, 110, 95, 95, 10, 67, 117, 115, 115, 115, 115, 115, 115, 97, 122, 122, 10, 113, 0, 41, 129, 113, 1, 125, 113, 2, 40, 85, 3, 97, 103, 101, 113, 3, 75, 34, 85, 6, 118, 97, 108, 117, 101, 115, 113, 4, 93, 113, 5, 40, 75, 1, 75, 2, 75, 3, 101, 85, 4, 110, 97, 109, 101, 113, 6, 85, 5, 72, 97, 114, 114, 121, 113, 7, 117, 98, 46};
 
-		ClassDict cd = (ClassDict) U(pickled);
+		var cd = (ClassDict) U(pickled);
 		Assert.Equal("__main__.Cussssssazz", cd["__class__"]);
 		Assert.Equal("Harry" , cd["name"]);
 		Assert.Equal(34 , cd["age"]);
@@ -137,10 +137,10 @@ public class UnpickleComplexTests
 	
 	[Fact]
 	public void TestClassDictConstructorSetsClass() {
-		ClassDict cd = new ClassDict("module", "myclass");
+		var cd = new ClassDict("module", "myclass");
 		Assert.Equal("module.myclass", cd["__class__"]);
 		
-		ClassDictConstructor cdc = new ClassDictConstructor("module", "myclass");
+		var cdc = new ClassDictConstructor("module", "myclass");
 		cd = (ClassDict) cdc.construct(Array.Empty<object>());
 		Assert.Equal("module.myclass", cd["__class__"]);
 		
@@ -152,7 +152,7 @@ public class UnpickleComplexTests
 		byte[] pickled = {128, 2, 99, 95, 95, 109, 97, 105, 110, 95, 95, 10, 67, 117, 115, 116, 111, 109, 67, 108, 97, 122, 122, 10, 113, 0, 41, 129, 113, 1, 125, 113, 2, 40, 85, 3, 97, 103, 101, 113, 3, 75, 34, 85, 6, 118, 97, 108, 117, 101, 115, 113, 4, 93, 113, 5, 40, 75, 1, 75, 2, 75, 3, 101, 85, 4, 110, 97, 109, 101, 113, 6, 85, 5, 72, 97, 114, 114, 121, 113, 7, 117, 98, 46};
 		
 		Unpickler.registerConstructor("__main__","CustomClazz", new CustomClazzConstructor());
-		CustomClazz o = (CustomClazz) U(pickled);
+		var o = (CustomClazz) U(pickled);
 		Assert.Equal("Harry" ,o.Name);
 		Assert.Equal(34 ,o.Age);
 		Assert.Equal(new ArrayList {1,2,3}, o.Values);
@@ -163,7 +163,7 @@ public class UnpickleComplexTests
 	[Fact]
 	public void TestUnpickleException() {
 		// python 2.x
-		PythonException x = (PythonException) U("cexceptions\nZeroDivisionError\np0\n(S'hello'\np1\ntp2\nRp3\n.");
+		var x = (PythonException) U("cexceptions\nZeroDivisionError\np0\n(S'hello'\np1\ntp2\nRp3\n.");
 		Assert.Equal("[exceptions.ZeroDivisionError] hello", x.Message);
 		Assert.Equal("exceptions.ZeroDivisionError", x.PythonExceptionType);
 		// python 3.x

@@ -27,7 +27,7 @@ public class UnpickleOpcodesTests: IDisposable {
 	private static readonly string STRING255;
 	
 	static UnpickleOpcodesTests() {
-		StringBuilder sb=new StringBuilder();
+		var sb=new StringBuilder();
 		for(int i=0; i<256; ++i) {
 			sb.Append((char)i);
 		}
@@ -217,7 +217,7 @@ public class UnpickleOpcodesTests: IDisposable {
 		//PERSID         = b'P'   # push persistent object; id is taken from string arg
 		var pickle = PickleUtils.str2bytes("(lp0\nI42\naP9999\na.");
 		Unpickler unpickler = new PersistentIdUnpickler();
-		IList result = (IList)unpickler.loads(pickle);
+		var result = (IList)unpickler.loads(pickle);
 		Assert.Equal(2, result.Count);
 		Assert.Equal(42, result[0]);
 		Assert.Equal("PersistentObject", result[1]);
@@ -228,7 +228,7 @@ public class UnpickleOpcodesTests: IDisposable {
 		//BINPERSID      = b'Q'   #  push persistent object; id is taken from stack
 		var pickle = PickleUtils.str2bytes("\u0080\u0004\u0095\u000f\u0000\u0000\u0000\u0000\u0000\u0000\u0000]\u0094(K*\u008c\u00049999\u0094Qe.");
 		Unpickler unpickler = new PersistentIdUnpickler();
-		IList result = (IList)unpickler.loads(pickle);
+		var result = (IList)unpickler.loads(pickle);
 		Assert.Equal(2, result.Count);
 		Assert.Equal(42, result[0]);
 		Assert.Equal("PersistentObject", result[1]);
@@ -255,7 +255,7 @@ public class UnpickleOpcodesTests: IDisposable {
 		Assert.Equal("\u00a1\u00a2\u00a3", U("S'\\xa1\\xa2\\xa3'\n."));
 		Assert.Equal("a\\x00y", U("S'a\\\\x00y'\n."));
 		
-		StringBuilder p=new StringBuilder("S'");
+		var p=new StringBuilder("S'");
 		for(int i=0;i<256;++i) {
 			p.Append("\\x");
 			p.Append(i.ToString("X2"));
@@ -334,7 +334,7 @@ public class UnpickleOpcodesTests: IDisposable {
 	[Fact]
 	public void TestAPPEND() {
 		//APPEND         = b'a'   # append stack top to list below it
-		ArrayList list = new ArrayList {42, 43};
+		var list = new ArrayList {42, 43};
 		Assert.Equal(list, U("]I42\naI43\na."));
 	}
 
@@ -363,7 +363,7 @@ public class UnpickleOpcodesTests: IDisposable {
 		Unpickler.registerConstructor("unittest", "Thingy", new ThingyConstructor());
 		// create a thing with initial value for the field 'a',
 		// the use BUILD to __setstate__() it with something else ('foo').
-		ThingyWithSetstate thingy = (ThingyWithSetstate) U("cunittest\nThingy\n(V123\ntR}S'a'\nS'foo'\nsb.");
+		var thingy = (ThingyWithSetstate) U("cunittest\nThingy\n(V123\ntR}S'a'\nS'foo'\nsb.");
 		Assert.Equal("foo",thingy.a);
 	}
 
@@ -387,7 +387,7 @@ public class UnpickleOpcodesTests: IDisposable {
 	[Fact]
 	public void TestAPPENDS() {
 		//APPENDS        = b'e'   # extend list on stack by topmost stack slice
-		ArrayList list = new ArrayList {42, 43};
+		var list = new ArrayList {42, 43};
 		Assert.Equal(list, U("](I42\nI43\ne."));
 	}
 
@@ -437,7 +437,7 @@ public class UnpickleOpcodesTests: IDisposable {
 	[Fact]
 	public void TestINST() {
 		//INST           = b'i'   # build & push class instance
-		ClassDict result = (ClassDict) U("(i__main__\nThing\n(dS'value'\nI32\nsb.");
+		var result = (ClassDict) U("(i__main__\nThing\n(dS'value'\nI32\nsb.");
 		Assert.Equal("__main__.Thing", result.ClassName);
 		Assert.Equal(32, result["value"]);
 	}
@@ -480,7 +480,7 @@ public class UnpickleOpcodesTests: IDisposable {
 	[Fact]
 	public void TestOBJ() {
 		//OBJ            = b'o'   # build & push class instance
-		ClassDict result = (ClassDict) U("\u0080\u0002(c__main__\nThing\no}U\u0005valueK sb.");
+		var result = (ClassDict) U("\u0080\u0002(c__main__\nThing\no}U\u0005valueK sb.");
 		Assert.Equal("__main__.Thing", result.ClassName);
 		Assert.Equal(32, result["value"]);
 	}
@@ -748,7 +748,7 @@ public class UnpickleOpcodesTests: IDisposable {
 	[Fact]
 	public void TestBYTEARRAY8() {
 		// BYTEARRAY8 = 0x96 (pickle protocol 5)
-		Unpickler u = new Unpickler();
+		var u = new Unpickler();
 		byte[] data = PickleUtils.str2bytes("\u0080\u0005\u0095\u000e\u0000\u0000\u0000\u0000\u0000\u0000\u0090\u0096\u0003\u0000\u0000\u0000\u0000\u0000\u0000\u0000abc\u0094.");
 		byte[] result = (byte[]) u.loads(data);
 		Assert.Equal(new byte[]{97, 98, 99}, result);

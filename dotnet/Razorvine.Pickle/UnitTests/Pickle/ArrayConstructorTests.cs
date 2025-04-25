@@ -17,7 +17,7 @@ public class ArrayConstructorTest {
     [Fact]
 	public void TestInvalidMachineTypes()
 	{
-		ArrayConstructor ac=new ArrayConstructor();
+		var ac=new ArrayConstructor();
 		try {
 			ac.construct('b', -1, new byte[]{0});
 			Assert.Fail("expected pickleexception");
@@ -57,7 +57,7 @@ public class ArrayConstructorTest {
 	[Fact]
 	public void TestChars()
 	{
-		ArrayConstructor ac=new ArrayConstructor();
+		var ac=new ArrayConstructor();
 		const char eurochar = (char)0x20ac;
 		
 		// c/u
@@ -84,7 +84,7 @@ public class ArrayConstructorTest {
 	[Fact]
 	public void TestInts()
 	{
-		ArrayConstructor ac=new ArrayConstructor();
+		var ac=new ArrayConstructor();
 
 		//h
 		Assert.Equal((short)-0x7f01, ((short[])ac.construct('h', 5, new byte[]{0x80,0xff}))[0]);
@@ -155,7 +155,7 @@ public class ArrayConstructorTest {
 	public void TestFloats()
 	{
 		// f/d
-		ArrayConstructor ac=new ArrayConstructor();
+		var ac=new ArrayConstructor();
 		Assert.Equal(16711938.0f,
 				((float[])ac.construct('f', 15, new byte[]{0x4b,0x7f,0x01,0x02}))[0] );
 		Assert.Equal(float.PositiveInfinity,

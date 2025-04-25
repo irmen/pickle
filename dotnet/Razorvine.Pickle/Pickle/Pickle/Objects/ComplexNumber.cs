@@ -26,7 +26,7 @@ public class ComplexNumber {
 
 	public override string ToString()
 	{
-		StringBuilder sb=new StringBuilder();
+		var sb=new StringBuilder();
 		sb.Append(Real);
 		if(Imaginary>0)
 			sb.Append('+');
@@ -58,7 +58,7 @@ public class ComplexNumber {
 	#region Equals and GetHashCode implementation
 	public override bool Equals(object obj)
 	{
-		ComplexNumber other = obj as ComplexNumber;
+		var other = obj as ComplexNumber;
 		if (other == null)
 			return false;
 		return Real==other.Real && Imaginary==other.Imaginary;

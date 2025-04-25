@@ -15,7 +15,7 @@ public class UnpickleStackTest {
 
 	[Fact]
 	public void TestPopSinceMarker() {
-		UnpickleStack s=new UnpickleStack();
+		var s=new UnpickleStack();
 		s.add("a");
 		s.add("b");
 		s.add_mark();
@@ -24,8 +24,8 @@ public class UnpickleStackTest {
 		s.add_mark();
 		s.add("e");
 		s.add("f");
-		ArrayList top=s.pop_all_since_marker();
-		ArrayList expected = new ArrayList {"e", "f"};
+		var top=s.pop_all_since_marker();
+		var expected = new ArrayList {"e", "f"};
 		Assert.Equal(expected, top);
 		Assert.Equal("d",s.pop());
 		Assert.Equal("c",s.pop());
@@ -33,7 +33,7 @@ public class UnpickleStackTest {
 
 	[Fact]
 	public void TestAddPop() {
-		UnpickleStack s=new UnpickleStack();
+		var s=new UnpickleStack();
 		Assert.Equal(0, s.size());
 		s.add("x");
 		Assert.Equal(1, s.size());
@@ -48,7 +48,7 @@ public class UnpickleStackTest {
 
 	[Fact]
 	public void TestClear() {
-		UnpickleStack s=new UnpickleStack();
+		var s=new UnpickleStack();
 		s.add("x");
 		s.add("y");
 		Assert.Equal(2, s.size());
@@ -58,7 +58,7 @@ public class UnpickleStackTest {
 
 	[Fact]
 	public void TestTrim() {
-		UnpickleStack s=new UnpickleStack();
+		var s=new UnpickleStack();
 		s.add("a");
 		s.add("b");
 		s.add("c");

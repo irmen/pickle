@@ -40,7 +40,7 @@ namespace Razorvine.Pickle
 			object tb=values["_pyroTraceback"];
 			// if the traceback is a list of strings, create one string from it
 			if(tb is ICollection tbcoll) {
-				StringBuilder sb=new StringBuilder();
+				var sb=new StringBuilder();
 				foreach(object line in tbcoll) {
 					sb.Append(line);
 				}	

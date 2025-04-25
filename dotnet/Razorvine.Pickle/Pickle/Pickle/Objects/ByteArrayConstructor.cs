@@ -27,7 +27,7 @@ public class ByteArrayConstructor : IObjectConstructor {
 				return args[0];
 			case 1:
 			{
-				ArrayList values=(ArrayList) args[0];
+				var values=(ArrayList) args[0];
 				var data=new byte[values.Count];
 				for(int i=0; i<data.Length; ++i) {
 					data[i] = Convert.ToByte(values[i]);

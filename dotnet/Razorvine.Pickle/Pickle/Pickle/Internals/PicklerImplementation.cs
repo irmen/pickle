@@ -83,7 +83,7 @@ namespace Razorvine.Pickle
                 return;
             }
 
-            Type t = o.GetType();
+            var t = o.GetType();
             // check the memo table, otherwise simply dispatch
             if ((useMemo && LookupMemo(t, o)) || dispatch(t, o))
             {
@@ -158,8 +158,8 @@ namespace Razorvine.Pickle
             // is it a primitive array?
             if (o is Array)
             {
-                Type componentType = t.GetElementType();
-                if (componentType != null && componentType.IsPrimitive)
+                var componentType = t.GetElementType();
+                if (componentType is { IsPrimitive: true })
                 {
                     put_arrayOfPrimitives(componentType, o);
                 }
@@ -251,7 +251,7 @@ namespace Razorvine.Pickle
             }
 
             // check registry
-            IObjectPickler custompickler = pickler.getCustomPickler(t);
+            var custompickler = pickler.getCustomPickler(t);
             if (custompickler != null)
             {
                 // to support this scenario this type derives from Stream and implements Write methods
@@ -260,7 +260,7 @@ namespace Razorvine.Pickle
                 return true;
             }
 
-            IObjectDeconstructor customDeconstructor = pickler.getCustomDeconstructor(t);
+            var customDeconstructor = pickler.getCustomDeconstructor(t);
             if (customDeconstructor != null) 
             {
                 put_global(customDeconstructor, o);
@@ -282,14 +282,14 @@ namespace Razorvine.Pickle
             }
 
             // more complex types
-            DataContractAttribute dca = (DataContractAttribute)Attribute.GetCustomAttribute(t, typeof(DataContractAttribute));
+            var dca = (DataContractAttribute)Attribute.GetCustomAttribute(t, typeof(DataContractAttribute));
             if (dca != null)
             {
                 put_datacontract(t, o, dca);
                 return true;
             }
 
-            SerializableAttribute sa = (SerializableAttribute)Attribute.GetCustomAttribute(t, typeof(SerializableAttribute));
+            var sa = (SerializableAttribute)Attribute.GetCustomAttribute(t, typeof(SerializableAttribute));
             if (sa != null)
             {
                 put_serializable(t, o);
@@ -477,7 +477,7 @@ namespace Razorvine.Pickle
 
         private void put_arrayOfPrimitives(Type t, object array)
         {
-            TypeCode typeCode = Type.GetTypeCode(t);
+            var typeCode = Type.GetTypeCode(t);
 
             // Special-case several array types written out specially.
             switch (typeCode)
@@ -655,24 +655,23 @@ namespace Razorvine.Pickle
             // first check 1 and 2-byte unsigned ints:
             if (v >= 0)
             {
-                if (v <= byte.MaxValue)
+                switch (v)
                 {
-                    output.WriteByte(Opcodes.BININT1);
-                    output.WriteByte((byte)v);
-                    return;
-                }
-                if (v <= ushort.MaxValue)
-                {
-                    output.WriteByte(Opcodes.BININT2);
-                    output.WriteByte((byte)(v & 0xff));
-                    output.WriteByte((byte)(v >> 8));
-                    return;
+                    case <= byte.MaxValue:
+                        output.WriteByte(Opcodes.BININT1);
+                        output.WriteByte((byte)v);
+                        return;
+                    case <= ushort.MaxValue:
+                        output.WriteByte(Opcodes.BININT2);
+                        output.WriteByte((byte)(v & 0xff));
+                        output.WriteByte((byte)(v >> 8));
+                        return;
                 }
             }
 
             // 4-byte signed int?
             long high_bits = v >> 31;  // shift sign extends
-            if (high_bits == 0 || high_bits == -1)
+            if (high_bits is 0 or -1)
             {
                 // All high bits are copies of bit 2**31, so the value fits in a 4-byte signed int.
                 output.WriteByte(Opcodes.BININT);
@@ -786,7 +785,7 @@ namespace Razorvine.Pickle
             var map = new Dictionary<string, object>();
             foreach (var field in fields)
             {
-                DataMemberAttribute dma = (DataMemberAttribute)field.GetCustomAttribute(typeof(DataMemberAttribute));
+                var dma = (DataMemberAttribute)field.GetCustomAttribute(typeof(DataMemberAttribute));
                 if (dma != null)
                 {
                     string name = dma.Name;

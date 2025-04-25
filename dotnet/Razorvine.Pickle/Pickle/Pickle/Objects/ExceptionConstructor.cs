@@ -1,7 +1,6 @@
 /* part of Pickle, by Irmen de Jong (irmen@razorvine.net) */
 
 using System;
-using System.Reflection;
 
 namespace Razorvine.Pickle.Objects
 {
@@ -37,7 +36,7 @@ public class ExceptionConstructor : IObjectConstructor {
 			}
 			object ex = Activator.CreateInstance(_type, args);
 			
-			PropertyInfo prop=ex.GetType().GetProperty("PythonExceptionType");
+			var prop=ex.GetType().GetProperty("PythonExceptionType");
 			if(prop!=null) {
 				prop.SetValue(ex, _pythonExceptionType, null);
 			}

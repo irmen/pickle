@@ -20,7 +20,7 @@ public class ArrayConstructor : IObjectConstructor {
 		// args for array constructor: [ string typecode, ArrayList values ]
 		// or: [ constructor_class, typecode, machinecode_type, byte[] ]
 		if (args.Length==4) {
-			ArrayConstructor constructor = (ArrayConstructor) args[0];
+			var constructor = (ArrayConstructor) args[0];
 			char arraytype = ((string) args[1])[0];
 			int machinecodeType = (int) args[2];
 			var data = (byte[]) args[3];
@@ -31,7 +31,7 @@ public class ArrayConstructor : IObjectConstructor {
 		}
 
 		string typecode = (string) args[0];
-		if(!(args[1] is ArrayList values)) {
+		if(args[1] is not ArrayList values) {
 			// python 2.6 encodes the array as a string sequence rather than a list
 			// unpickling this is not supported at this time
 			throw new PickleException("unsupported Python 2.6 array pickle format");
@@ -172,7 +172,7 @@ public class ArrayConstructor : IObjectConstructor {
 		{
 			if (machinecode != 18 && machinecode != 19 && machinecode != 20 && machinecode != 21)
 				throw new PickleException("for c/u type must be 18/19/20/21");
-			if (machinecode == 18 || machinecode == 19) {
+			if (machinecode is 18 or 19) {
 				// utf-16 , 2 bytes
 				if (data.Length % 2 != 0)
 					throw new PickleException("data size alignment error");
@@ -226,11 +226,11 @@ public class ArrayConstructor : IObjectConstructor {
 		{
 			if (machinecode != 8 && machinecode != 9 && machinecode != 12 && machinecode != 13)
 				throw new PickleException("for l type must be 8/9/12/13");
-			if ((machinecode==8 || machinecode==9) && data.Length % 4 != 0)
+			if (machinecode is 8 or 9 && data.Length % 4 != 0)
 				throw new PickleException("data size alignment error");
-			if ((machinecode==12 || machinecode==13) && data.Length % 8 != 0)
+			if (machinecode is 12 or 13 && data.Length % 8 != 0)
 				throw new PickleException("data size alignment error");
-			if(machinecode==8 || machinecode==9) {
+			if(machinecode is 8 or 9) {
 				//32 bits
 				return constructIntArrayFromInt32(machinecode, data);
 			}
@@ -250,11 +250,11 @@ public class ArrayConstructor : IObjectConstructor {
 		{
 			if (machinecode != 6 && machinecode != 7 && machinecode != 10 && machinecode != 11)
 				throw new PickleException("for L type must be 6/7/10/11");
-			if ((machinecode==6 || machinecode==7) && data.Length % 4 != 0)
+			if (machinecode is 6 or 7 && data.Length % 4 != 0)
 				throw new PickleException("data size alignment error");
-			if ((machinecode==10 || machinecode==11) && data.Length % 8 != 0)
+			if (machinecode is 10 or 11 && data.Length % 8 != 0)
 				throw new PickleException("data size alignment error");
-			if(machinecode==6 || machinecode==7) {
+			if(machinecode is 6 or 7) {
 			    // 32 bits
 			    return constructUIntArrayFromUInt32(machinecode, data);
 			}
